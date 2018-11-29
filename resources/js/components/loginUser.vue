@@ -17,6 +17,7 @@
             </div>
             <div class="form-group">
                 <a class="btn btn-primary" v-on:click.prevent="login">Login</a>
+                <a class="btn btn-light" v-on:click.prevent="cancel">Cancel</a>
             </div>
         </div>
     </div>
@@ -56,6 +57,9 @@
                         this.showMessage = true;
                         console.log(error);
                     })
+            },
+            cancel(){
+                
             }
         },
     }

@@ -51119,6 +51119,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -51152,7 +51153,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.showMessage = true;
                 console.log(error);
             });
-        }
+        },
+        cancel: function cancel() {}
     }
 });
 
@@ -51258,6 +51260,20 @@ var render = function() {
             }
           },
           [_vm._v("Login")]
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-light",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.cancel($event)
+              }
+            }
+          },
+          [_vm._v("Cancel")]
         )
       ])
     ])
@@ -51341,6 +51357,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -51367,7 +51384,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.showMessage = true;
                 console.log(error);
             });
-        }
+        },
+        cancel: function cancel() {}
     }
 });
 
@@ -51396,6 +51414,20 @@ var render = function() {
             }
           },
           [_vm._v("Logout")]
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-light",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.cancel($event)
+              }
+            }
+          },
+          [_vm._v("Cancel")]
         )
       ])
     ])

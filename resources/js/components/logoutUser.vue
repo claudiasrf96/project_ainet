@@ -8,6 +8,7 @@
             <h2>Confirmar Logout</h2>
             <div class="form-group">
                 <a class="btn btn-primary" v-on:click.prevent="logout">Logout</a>
+                <a class="btn btn-light" v-on:click.prevent="cancel">Cancel</a>
             </div>
         </div>
     </div>
@@ -39,7 +40,10 @@
                         this.showMessage = true;
                         console.log(error);
                     })            
-                }
+                },
+            cancel(){
+                
+            }
         }
     }
 </script>
