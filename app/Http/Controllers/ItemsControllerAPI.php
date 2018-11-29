@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ItemsResource;
-use App\Items;
+use App\Item;
 
 class ItemsControllerAPI extends Controller
 {
@@ -15,7 +15,7 @@ class ItemsControllerAPI extends Controller
      */
     public function index()
     {
-        return ItemsResource::collection(Items::all());
+        return ItemsResource::collection(Item::all());
     }
 
     /**
