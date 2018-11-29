@@ -14022,10 +14022,11 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-var login = Vue.component('loginUser', __webpack_require__(41));
-var logout = Vue.component('logoutUser', __webpack_require__(44));
+var layout = Vue.component('layout-user', __webpack_require__(52));
+var login = Vue.component('login-user', __webpack_require__(41));
+var logout = Vue.component('logout-user', __webpack_require__(44));
 
-var routes = [{ path: '/', redirect: '/users', name: 'root' }, { path: '/users', component: login, name: 'users' }, { path: '/loginUser', component: login, name: 'login' }, { path: '/logoutUser', component: logout, name: 'logout' }];
+var routes = [{ path: '/', redirect: '/users', name: 'root' }, { path: '/users', component: layout, name: 'layout-user' }, { path: '/login-user', component: login, name: 'login' }, { path: '/logout-user', component: logout, name: 'logout' }];
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({ //cria o componente rotas
   routes: routes
 });
@@ -50295,6 +50296,125 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(11)
+/* script */
+var __vue_script__ = __webpack_require__(53)
+/* template */
+var __vue_template__ = __webpack_require__(54)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Layout.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e245f756", Component.options)
+  } else {
+    hotAPI.reload("data-v-e245f756", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    methods: {
+        loginUser: function loginUser() {
+            console.log("a");
+            this.$router.push({ name: 'login' });
+        }
+    }
+});
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "router-link",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { to: "/login-user", role: "button" }
+        },
+        [_vm._v("Login")]
+      ),
+      _vm._v(" "),
+      _c(
+        "router-link",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { to: "/logout-user", role: "button" }
+        },
+        [_vm._v("Logout")]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e245f756", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

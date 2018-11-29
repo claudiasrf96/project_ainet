@@ -20,14 +20,15 @@ Vue.use(VueRouter);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-const login = Vue.component('loginUser', require('./components/loginUser.vue'));
-const logout = Vue.component('logoutUser', require('./components/logoutUser.vue'));
+const layout = Vue.component('layout-user', require('./components/Layout.vue'));
+const login = Vue.component('login-user', require('./components/loginUser.vue'));
+const logout = Vue.component('logout-user', require('./components/logoutUser.vue'));
 
 const routes = [
     { path: '/', redirect: '/users', name: 'root'},
-    { path: '/users', component: login, name: 'users'},
-    { path: '/loginUser', component: login, name: 'login'},
-    { path: '/logoutUser', component: logout, name: 'logout'},
+    { path: '/users', component: layout, name: 'layout-user'},
+    { path: '/login-user', component: login, name: 'login'},
+    { path: '/logout-user', component: logout, name: 'logout'},
 ];
 const router = new VueRouter({//cria o componente rotas
     routes:routes
