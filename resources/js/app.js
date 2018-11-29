@@ -12,6 +12,8 @@ window.Vue = require('vue');
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);  
 
+import store from './stores/global-store';
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -21,18 +23,7 @@ Vue.use(VueRouter);
  */
 
 const layout = Vue.component('layout-user', require('./components/Layout.vue'));
-const login = Vue.component('login-user', require('./components/loginUser.vue'));
-const logout = Vue.component('logout-user', require('./components/logoutUser.vue'));
 
-const routes = [
-    { path: '/', redirect: '/users', name: 'root'},
-    { path: '/users', component: layout, name: 'layout-user'},
-    { path: '/login-user', component: login, name: 'login'},
-    { path: '/logout-user', component: logout, name: 'logout'},
-];
-const router = new VueRouter({//cria o componente rotas
-    routes:routes
-});
 /*
 Vue.component('login-user', require('./components/LoginUser.vue'));
 Vue.component('layout-vue', require('./components/Layout.vue'));
@@ -50,5 +41,6 @@ Vue.component('layout-vue', require('./components/Layout.vue'));
  */
 
 const app = new Vue({
-    el: '#app', router //rotas acessiveis
+    el: '#app', 
+    store 
 });
