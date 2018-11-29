@@ -13,7 +13,7 @@
         </head> 
         <body>
         <div class="container" id="app">
-            <router-view></router-view>
+            <layout-user></layout-user>   
             <!-- <router-link to="/login"  v-show="!this.$store.state.user">Login</router-link>  -->
         </div>
 

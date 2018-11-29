@@ -14000,6 +14000,7 @@ module.exports = __webpack_require__(47);
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(40);
+throw new Error("Cannot find module \"./stores/global-store\"");
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -14014,6 +14015,8 @@ window.Vue = __webpack_require__(37);
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
 
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -14023,13 +14026,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]);
  */
 
 var layout = Vue.component('layout-user', __webpack_require__(52));
-var login = Vue.component('login-user', __webpack_require__(41));
-var logout = Vue.component('logout-user', __webpack_require__(44));
 
-var routes = [{ path: '/', redirect: '/users', name: 'root' }, { path: '/users', component: layout, name: 'layout-user' }, { path: '/login-user', component: login, name: 'login' }, { path: '/logout-user', component: logout, name: 'logout' }];
-var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({ //cria o componente rotas
-  routes: routes
-});
 /*
 Vue.component('login-user', require('./components/LoginUser.vue'));
 Vue.component('layout-vue', require('./components/Layout.vue'));
@@ -14047,7 +14044,8 @@ Vue.component('layout-vue', require('./components/Layout.vue'));
  */
 
 var app = new Vue({
-  el: '#app', router: router //rotas acessiveis
+  el: '#app',
+  store: __WEBPACK_IMPORTED_MODULE_1__stores_global_store___default.a
 });
 
 /***/ }),
@@ -50021,6 +50019,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -50066,80 +50066,102 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "jumbotron" }, [
-    _c("h2", [_vm._v("Login")]),
+  return _c("div", [
+    _vm.showMessage
+      ? _c("div", { staticClass: "alert", class: _vm.typeofmsg }, [
+          _c(
+            "button",
+            {
+              staticClass: "close-btn",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.showMessage = false
+                }
+              }
+            },
+            [_vm._v("×")]
+          ),
+          _vm._v(" "),
+          _c("strong", [_vm._v(_vm._s(_vm.message))])
+        ])
+      : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "inputEmail" } }, [_vm._v("Email")]),
+    _c("div", { staticClass: "jumbotron" }, [
+      _c("h2", [_vm._v("Login")]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.user.email,
-            expression: "user.email"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: {
-          type: "email",
-          name: "email",
-          id: "inputEmail",
-          placeholder: "Email address"
-        },
-        domProps: { value: _vm.user.email },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "inputEmail" } }, [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.user.email,
+              expression: "user.email"
             }
-            _vm.$set(_vm.user, "email", $event.target.value)
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "inputPassword" } }, [_vm._v("Password")]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.user.password,
-            expression: "user.password"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "password", name: "password", id: "inputPassword" },
-        domProps: { value: _vm.user.password },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.user, "password", $event.target.value)
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-primary",
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "email",
+            name: "email",
+            id: "inputEmail",
+            placeholder: "Email address"
+          },
+          domProps: { value: _vm.user.email },
           on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.login($event)
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.user, "email", $event.target.value)
             }
           }
-        },
-        [_vm._v("Login")]
-      )
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "inputPassword" } }, [_vm._v("Password")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.user.password,
+              expression: "user.password"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { type: "password", name: "password", id: "inputPassword" },
+          domProps: { value: _vm.user.password },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.user, "password", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-primary",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.login($event)
+              }
+            }
+          },
+          [_vm._v("Login")]
+        )
+      ])
     ])
   ])
 }
@@ -50354,6 +50376,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(40);
 //
 //
 //
@@ -50365,13 +50388,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
+var login = Vue.component('login-user', __webpack_require__(41));
+var logout = Vue.component('logout-user', __webpack_require__(44));
+
+var routes = [{ path: '/', redirect: '/login-user', name: 'root' }, { path: '/login-user', component: login, name: 'login' }, { path: '/logout-user', component: logout, name: 'logout' }];
+
+var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({ //cria o componente rotas
+    routes: routes
+});
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     methods: {
+
         loginUser: function loginUser() {
             console.log("a");
             this.$router.push({ name: 'login' });
         }
-    }
+    },
+    router: router
 });
 
 /***/ }),
@@ -50401,7 +50437,9 @@ var render = function() {
           attrs: { to: "/logout-user", role: "button" }
         },
         [_vm._v("Logout")]
-      )
+      ),
+      _vm._v(" "),
+      _c("router-view")
     ],
     1
   )
