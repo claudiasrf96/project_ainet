@@ -1,21 +1,38 @@
+
+<template>
+
+    <v-app >
+        <v-layout row>
+        <v-flex xs12 sm6 offset-sm3>
+            <v-card>
+            <v-img :src="imgSrc"  height="200px" ></v-img>
+    
+            <v-card-title primary-title>
+                    <div class="headline"> {{ name }}</div> 
+            </v-card-title>
+    
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="show = !show">
+                <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+                </v-btn>
+            </v-card-actions>
+    
+            <v-slide-y-transition>
+                <v-card-text v-show="show">
+                    {{ description }} 
+                </v-card-text>
+            </v-slide-y-transition>
+            </v-card>
+        </v-flex>
+        </v-layout>
+    </v-app>
+</template>
+<!--
 <template>
     <div id="app">
     <v-app id="inspire">
-        <v-data-table
-        :headers="headers"
-        :items="desserts"
-        class="elevation-1"
-        >
-        <template slot="headerCell" slot-scope="props">
-            <v-tooltip bottom>
-            <span slot="activator">
-                {{ props.header.text }}
-            </span>
-            <span>
-                {{ props.header.text }}
-            </span>
-            </v-tooltip>
-        </template>
+        <v-data-table :headers="headers" :items="desserts" class="elevation-1">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
             <td class="text-xs-right">{{ props.item.calories }}</td>
@@ -28,39 +45,30 @@
     </v-app>
     </div>
 </template>
-
+-->
 <script type="text/javascript">    
     export default {
         data () {
             return {
-            headers: [
-                {
-                text: 'Dessert (100g serving)',
-                align: 'left',
-                sortable: false,
-                value: 'name'
-                },
-                { text: 'Calories', value: 'calories' },
-                { text: 'Fat (g)', value: 'fat' },
-                { text: 'Carbs (g)', value: 'carbs' },
-                { text: 'Protein (g)', value: 'protein' },
-                { text: 'Iron (%)', value: 'iron' }
-            ],
-            desserts: [
-                {
-                value: false,
-                name: 'Frozen Yogurt',
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                iron: '1%'
-                }
-            ]
+                name: '',
+                type: '',
+                description: '',
+                price: '',
+                imgSrc: '',
+                show: false,
+                menu: []
             }
         },mounted () {
             axios.get('/api/menu').then(response =>(
-                this.info = response
+                //this.menu = response.data,
+                response.data.data.forEach(element => {
+                    this.name = element.name,
+                    this.type = element.type,
+                    this.description = element.description,
+                    this.imgSrc = element.photo_url,
+                    console.log(element.photo_url),
+                    this.price = element.price
+                })
             ))
         }
     }

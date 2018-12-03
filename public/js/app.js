@@ -74011,32 +74011,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            headers: [{
-                text: 'Dessert (100g serving)',
-                align: 'left',
-                sortable: false,
-                value: 'name'
-            }, { text: 'Calories', value: 'calories' }, { text: 'Fat (g)', value: 'fat' }, { text: 'Carbs (g)', value: 'carbs' }, { text: 'Protein (g)', value: 'protein' }, { text: 'Iron (%)', value: 'iron' }],
-            desserts: [{
-                value: false,
-                name: 'Frozen Yogurt',
-                calories: 159,
-                fat: 6.0,
-                carbs: 24,
-                protein: 4.0,
-                iron: '1%'
-            }]
+            name: '',
+            type: '',
+            description: '',
+            price: '',
+            imgSrc: '',
+            show: false,
+            menu: []
         };
     },
     mounted: function mounted() {
         var _this = this;
 
         axios.get('/api/menu').then(function (response) {
-            return _this.info = response;
+            return (
+                //this.menu = response.data,
+                response.data.data.forEach(function (element) {
+                    _this.name = element.name, _this.type = element.type, _this.description = element.description, _this.imgSrc = element.photo_url, console.log(element.photo_url), _this.price = element.price;
+                })
+            );
         });
     }
 });
@@ -74050,75 +74064,91 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    { attrs: { id: "app" } },
+    "v-app",
     [
       _c(
-        "v-app",
-        { attrs: { id: "inspire" } },
+        "v-layout",
+        { attrs: { row: "" } },
         [
-          _c("v-data-table", {
-            staticClass: "elevation-1",
-            attrs: { headers: _vm.headers, items: _vm.desserts },
-            scopedSlots: _vm._u([
-              {
-                key: "headerCell",
-                fn: function(props) {
-                  return [
-                    _c("v-tooltip", { attrs: { bottom: "" } }, [
+          _c(
+            "v-flex",
+            { attrs: { xs12: "", sm6: "", "offset-sm3": "" } },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-img", { attrs: { src: _vm.imgSrc, height: "200px" } }),
+                  _vm._v(" "),
+                  _c("v-card-title", { attrs: { "primary-title": "" } }, [
+                    _c("div", { staticClass: "headline" }, [
+                      _vm._v(" " + _vm._s(_vm.name))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
                       _c(
-                        "span",
-                        { attrs: { slot: "activator" }, slot: "activator" },
+                        "v-btn",
+                        {
+                          attrs: { icon: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.show = !_vm.show
+                            }
+                          }
+                        },
+                        [
+                          _c("v-icon", [
+                            _vm._v(
+                              _vm._s(
+                                _vm.show
+                                  ? "keyboard_arrow_down"
+                                  : "keyboard_arrow_up"
+                              )
+                            )
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-slide-y-transition",
+                    [
+                      _c(
+                        "v-card-text",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.show,
+                              expression: "show"
+                            }
+                          ]
+                        },
                         [
                           _vm._v(
-                            "\n            " +
-                              _vm._s(props.header.text) +
-                              "\n        "
+                            "\n                " +
+                              _vm._s(_vm.description) +
+                              " \n            "
                           )
                         ]
-                      ),
-                      _vm._v(" "),
-                      _c("span", [
-                        _vm._v(
-                          "\n            " +
-                            _vm._s(props.header.text) +
-                            "\n        "
-                        )
-                      ])
-                    ])
-                  ]
-                }
-              },
-              {
-                key: "items",
-                fn: function(props) {
-                  return [
-                    _c("td", [_vm._v(_vm._s(props.item.name))]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-right" }, [
-                      _vm._v(_vm._s(props.item.calories))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-right" }, [
-                      _vm._v(_vm._s(props.item.fat))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-right" }, [
-                      _vm._v(_vm._s(props.item.carbs))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-right" }, [
-                      _vm._v(_vm._s(props.item.protein))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-xs-right" }, [
-                      _vm._v(_vm._s(props.item.iron))
-                    ])
-                  ]
-                }
-              }
-            ])
-          })
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
         ],
         1
       )
