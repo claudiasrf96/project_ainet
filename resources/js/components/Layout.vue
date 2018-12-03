@@ -1,11 +1,19 @@
 <template>
-    <div>
+    <div> 
 
        <!-- <router-link to="/users" class="btn btn-primary"  role="button">Users</router-link>-->
-        <menu-user></menu-user>
-        <router-link to="/login-user"  class="btn btn-primary"  role="button">Login</router-link>
-        <router-link to="/logout-user" class="btn btn-primary"  role="button">Logout</router-link>
-        <router-view></router-view>
+        <v-toolbar app>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+                <!--  <v-toolbar-title></v-toolbar-title> -->
+                    <v-btn flat to="/menu-user" >Menu</v-btn>
+                    <v-btn flat to="/login-user" >Login</v-btn>
+                    <v-btn flat to="/logout-user"> Logout</v-btn>
+            </v-toolbar-items>
+        </v-toolbar>
+        <v-content>
+            <router-view></router-view>
+        </v-content>
         <!--<button @click="loginUser">Login</button>-->
         
     </div>
@@ -16,12 +24,13 @@
 <script>
     import VueRouter from 'vue-router';
 
+
+    const menu = Vue.component('menu-user', require('./menu.vue'));
     const login = Vue.component('login-user', require('./loginUser.vue'));
     const logout = Vue.component('logout-user', require('./logoutUser.vue'));
-    const menu = Vue.component('menu-user', require('./menu.vue'));
 
     const routes = [
-    { path: '/', redirect: '/login-user', name: 'root'},
+    { path: '/', redirect: '/menu-user', name: 'root'},
     { path: '/menu-user', component: menu, name: 'menu'},
     { path: '/login-user', component: login, name: 'login'},
     { path: '/logout-user', component: logout, name: 'logout'},
@@ -31,7 +40,11 @@
         routes:routes
     });    
 
-    export default {
+    export default {data: function(){
+		return { 
+		        loged: true
+			}
+		},
         methods: {
             loginUser: function(){
                 this.$router.push({ name: 'login' })

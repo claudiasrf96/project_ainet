@@ -17,6 +17,9 @@ Vue.use(VueRouter);
 import Vuex from 'vuex'; 
 Vue.use(Vuex);
 
+import Vuetify from 'vuetify';
+Vue.use(Vuetify)
+
 import store from './stores/global-store';
 
 /**
@@ -47,5 +50,5 @@ Vue.component('layout-vue', require('./components/Layout.vue'));
 
 const app = new Vue({
     el: '#app', 
-    store 
+    store
 });

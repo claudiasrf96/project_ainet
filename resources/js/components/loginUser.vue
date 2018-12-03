@@ -1,9 +1,5 @@
 <template>
     <div>
-        <div class="alert" :class="typeofmsg" v-if="showMessage">             
-            <button type="button" class="close-btn" v-on:click="showMessage=false">&times;</button>
-            <strong>{{ message }}</strong>
-        </div>
         <div class="jumbotron">
             <h2>Login</h2>
             <div class="form-group">
@@ -19,6 +15,9 @@
                 <a class="btn btn-primary" v-on:click.prevent="login">Login</a>
                 <a class="btn btn-light" v-on:click.prevent="cancel">Cancel</a>
             </div>
+            <v-alert  v-model="showMessage"  dismissible type="error" :color="alertType">
+                {{ message }}
+            </v-alert>
         </div>
     </div>
 </template>
@@ -34,6 +33,8 @@
                 typeofmsg: "alert-success",
                 showMessage: false,
                 message: "",
+                alertType: "",
+                alertIcon: "",
             }
         },
         methods: {
@@ -41,6 +42,7 @@
                 this.showMessage = false;
                 axios.post('api/login', this.user)
                     .then(response => {
+                        
                         this.$store.commit('setToken',response.data.access_token);
                         return axios.get('api/users/me');
                     })
@@ -49,12 +51,14 @@
                         this.typeofmsg = "alert-success";
                         this.message = "User authenticated correctly";
                         this.showMessage = true;
+                        this.alertType = "#4caf50";
                     })
                     .catch(error => {
                         this.$store.commit('clearUserAndToken');
                         this.typeofmsg = "alert-danger";
                         this.message = "Invalid credentials";
                         this.showMessage = true;
+                        this.alertType = "#ff5252";
                         console.log(error);
                     })
             },
