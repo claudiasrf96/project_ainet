@@ -14,13 +14,12 @@
         <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
 
         </head> 
-        <body>
-        <div class="container" id="app">
+    <body>
+        <div  id="app">
             <layout-user></layout-user>   
-            <!-- <router-link to="/login"  v-show="!this.$store.state.user">Login</router-link>  -->
         </div>
 
-    <script src="{{ asset('js/app.js') }}"></script>      
+        <script src="{{ asset('js/app.js') }}"></script>      
     </body>
 </html>
 

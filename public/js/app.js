@@ -73894,6 +73894,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -74565,7 +74572,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "v-app",
     [
       _c(
         "v-toolbar",
@@ -74594,7 +74601,31 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("v-content", [_c("router-view")], 1)
+      _c("v-content", [_c("router-view")], 1),
+      _vm._v(" "),
+      _c(
+        "v-footer",
+        { attrs: { dark: "", height: "auto" } },
+        [
+          _c(
+            "v-card",
+            { staticClass: "flex", attrs: { flat: "", tile: "" } },
+            [
+              _c("v-card-title", { staticClass: "teal" }, [
+                _c("strong", { staticClass: "subheading" }, [
+                  _vm._v("Get connected with us on social networks!")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("v-card-actions", {
+                staticClass: "grey darken-3 justify-center"
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )

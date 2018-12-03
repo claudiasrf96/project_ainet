@@ -1,11 +1,11 @@
 <template>
-    <div> 
-
-       <!-- <router-link to="/users" class="btn btn-primary"  role="button">Users</router-link>-->
-        <v-toolbar app>
+    <!--  <v-toolbar-title></v-toolbar-title> -->
+    <!--<button @click="loginUser">Login</button>-->
+    <!-- <router-link to="/users" class="btn btn-primary"  role="button">Users</router-link>-->
+    <v-app>
+        <v-toolbar app >
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <!--  <v-toolbar-title></v-toolbar-title> -->
                     <v-btn flat to="/menu-user" >Menu</v-btn>
                     <v-btn flat to="/login-user" >Login</v-btn>
                     <v-btn flat to="/logout-user"> Logout</v-btn>
@@ -14,9 +14,16 @@
         <v-content>
             <router-view></router-view>
         </v-content>
-        <!--<button @click="loginUser">Login</button>-->
-        
-    </div>
+
+        <v-footer dark height="auto" >
+            <v-card class="flex" flat tile>
+                <v-card-title class="teal">
+                    <strong class="subheading">Get connected with us on social networks!</strong>
+                </v-card-title>
+                <v-card-actions class="grey darken-3 justify-center"></v-card-actions>
+            </v-card>
+        </v-footer>
+    </v-app>
 
     
 </template>
