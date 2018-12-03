@@ -29,4 +29,4 @@ Route::middleware('auth:api')->get('teste', function () {
     return response()->json(['msg'=>'Só um teste'], 200);
 });
 
-Route::get('menu', 'ItemsControllerAPI@index');
+Route::get('/menu', 'ItemsControllerAPI@index');
