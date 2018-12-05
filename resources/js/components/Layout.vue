@@ -12,7 +12,7 @@
                     <v-btn flat to="/menu-admin">Profile</v-btn>
             </v-toolbar-items>
         </v-toolbar>
-        <v-content>
+        <v-content fluid>
             <router-view></router-view>
         </v-content>
 
@@ -43,8 +43,14 @@
     { path: '/menu-user', component: menu, name: 'menu'},
     { path: '/login-user', component: login, name: 'login'},
     { path: '/logout-user', component: logout, name: 'logout'},
-    { path: '/menu-admin', component: admin, name: 'admin'},
-    { path: '/profile-user', component: profile, name: 'profile'},
+    { path: '/menu-admin', component: admin, name: 'admin',
+     children: [
+        {
+          path: '/profile-user',
+          component: profile,
+          name: 'profile'
+        }]
+        },
     ];
 
     const router = new VueRouter({//cria o componente rotas

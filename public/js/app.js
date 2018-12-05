@@ -73911,7 +73911,13 @@ var logout = Vue.component('logout-user', __webpack_require__(57));
 var admin = Vue.component('menu-admin', __webpack_require__(68));
 var profile = Vue.component('profile-user', __webpack_require__(60));
 
-var routes = [{ path: '/', redirect: '/menu-user', name: 'root' }, { path: '/menu-user', component: menu, name: 'menu' }, { path: '/login-user', component: login, name: 'login' }, { path: '/logout-user', component: logout, name: 'logout' }, { path: '/menu-admin', component: admin, name: 'admin' }, { path: '/profile-user', component: profile, name: 'profile' }];
+var routes = [{ path: '/', redirect: '/menu-user', name: 'root' }, { path: '/menu-user', component: menu, name: 'menu' }, { path: '/login-user', component: login, name: 'login' }, { path: '/logout-user', component: logout, name: 'logout' }, { path: '/menu-admin', component: admin, name: 'admin',
+    children: [{
+        path: '/profile-user',
+        component: profile,
+        name: 'profile'
+    }]
+}];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({ //cria o componente rotas
     routes: routes
@@ -74657,9 +74663,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -74681,7 +74684,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.showMessage = false;
             axios.post('api/login', this.user).then(function (response) {
-
                 _this.$store.commit('setToken', response.data.access_token);
                 return axios.get('api/users/me');
             }).then(function (response) {
@@ -74690,16 +74692,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.message = "User authenticated correctly";
                 _this.showMessage = true;
                 _this.alertType = "#4caf50";
+                console.log(response.data.data);
+                //this.loginUser(response.data.data);
             }).catch(function (error) {
                 _this.$store.commit('clearUserAndToken');
                 _this.typeofmsg = "alert-danger";
                 _this.message = "Invalid credentials";
                 _this.showMessage = true;
                 _this.alertType = "#ff5252";
-                console.log(error);
             });
         },
-        cancel: function cancel() {}
+        loginUser: function loginUser(info) {
+            this.$router.push({ name: 'admin', params: { info: info } });
+        }
     }
 });
 
@@ -74711,120 +74716,113 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "jumbotron" },
-      [
-        _c("h2", [_vm._v("Login")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "inputEmail" } }, [_vm._v("Email")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.user.email,
-                expression: "user.email"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "email",
-              name: "email",
-              id: "inputEmail",
-              placeholder: "Email address"
-            },
-            domProps: { value: _vm.user.email },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.user, "email", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "inputPassword" } }, [
-            _vm._v("Password")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.user.password,
-                expression: "user.password"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { type: "password", name: "password", id: "inputPassword" },
-            domProps: { value: _vm.user.password },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.user, "password", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
+  return _c(
+    "v-container",
+    [
+      _c(
+        "v-layout",
+        { attrs: { "align-center": "" } },
+        [
           _c(
-            "a",
-            {
-              staticClass: "btn btn-primary",
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.login($event)
+            "v-flex",
+            { attrs: { xs6: "", sm8: "", "offset-sm2": "" } },
+            [
+              _c("h2", [_vm._v("Login")]),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  name: "email",
+                  id: "inputEmail",
+                  counter: 10,
+                  label: "Name",
+                  "data-vv-name": "name",
+                  required: ""
+                },
+                model: {
+                  value: _vm.user.email,
+                  callback: function($$v) {
+                    _vm.$set(_vm.user, "email", $$v)
+                  },
+                  expression: "user.email"
                 }
-              }
-            },
-            [_vm._v("Login")]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "btn btn-light",
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.cancel($event)
+              }),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  name: "password",
+                  id: "inputPassword",
+                  label: "Password",
+                  "data-vv-name": "password",
+                  required: ""
+                },
+                model: {
+                  value: _vm.user.password,
+                  callback: function($$v) {
+                    _vm.$set(_vm.user, "password", $$v)
+                  },
+                  expression: "user.password"
                 }
-              }
-            },
-            [_vm._v("Cancel")]
+              }),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.login($event)
+                    }
+                  }
+                },
+                [_vm._v("Login")]
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.cancel($event)
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              ),
+              _vm._v(" "),
+              _c(
+                "v-alert",
+                {
+                  attrs: {
+                    dismissible: "",
+                    type: "error",
+                    color: _vm.alertType
+                  },
+                  model: {
+                    value: _vm.showMessage,
+                    callback: function($$v) {
+                      _vm.showMessage = $$v
+                    },
+                    expression: "showMessage"
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.message) +
+                      "\n            "
+                  )
+                ]
+              )
+            ],
+            1
           )
-        ]),
-        _vm._v(" "),
-        _c(
-          "v-alert",
-          {
-            attrs: { dismissible: "", type: "error", color: _vm.alertType },
-            model: {
-              value: _vm.showMessage,
-              callback: function($$v) {
-                _vm.showMessage = $$v
-              },
-              expression: "showMessage"
-            }
-          },
-          [_vm._v("\n            " + _vm._s(_vm.message) + "\n        ")]
-        )
-      ],
-      1
-    )
-  ])
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -75099,7 +75097,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("v-content", [_c("router-view")], 1),
+      _c("v-content", { attrs: { fluid: "" } }, [_c("router-view")], 1),
       _vm._v(" "),
       _c(
         "v-footer",
@@ -75155,7 +75153,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("asf\n")])
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -75171,6 +75169,7 @@ if (false) {
 /* 67 */
 /***/ (function(module, exports) {
 
+//
 //
 //
 //
@@ -75266,15 +75265,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['title'],
   data: function data() {
     return {
-      drawer: true,
-      items: [{ title: 'Home', icon: 'dashboard' }, { title: 'About', icon: 'question_answer' }],
-      mini: true,
-      right: null
+      items: []
     };
+  },
+
+  methods: {
+    procura: function procura(e) {
+      this.$router.push({ name: 'profile-user' });
+    }
   }
 });
 
@@ -75291,25 +75305,7 @@ var render = function() {
     [
       _c(
         "v-navigation-drawer",
-        {
-          attrs: {
-            stateless: "",
-            "hide-overlay": "",
-            "mini-variant": _vm.mini
-          },
-          on: {
-            "update:miniVariant": function($event) {
-              _vm.mini = $event
-            }
-          },
-          model: {
-            value: _vm.drawer,
-            callback: function($$v) {
-              _vm.drawer = $$v
-            },
-            expression: "drawer"
-          }
-        },
+        { attrs: { stateless: "", value: "true" } },
         [
           _c(
             "v-toolbar",
@@ -75332,32 +75328,7 @@ var render = function() {
                         })
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "v-list-tile-content",
-                        [_c("v-list-tile-title", [_vm._v("John Leider")])],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-list-tile-action",
-                        [
-                          _c(
-                            "v-btn",
-                            {
-                              attrs: { icon: "" },
-                              nativeOn: {
-                                click: function($event) {
-                                  $event.stopPropagation()
-                                  _vm.mini = !_vm.mini
-                                }
-                              }
-                            },
-                            [_c("v-icon", [_vm._v("chevron_left")])],
-                            1
-                          )
-                        ],
-                        1
-                      )
+                      _c("v-list-tile-title", [_vm._v("John Leider")])
                     ],
                     1
                   )
@@ -75372,36 +75343,87 @@ var render = function() {
             "v-list",
             { staticClass: "pt-0", attrs: { dense: "" } },
             [
-              _c("v-divider"),
-              _vm._v(" "),
-              _vm._l(_vm.items, function(item) {
-                return _c(
-                  "v-list-tile",
-                  { key: item.title, on: { click: function($event) {} } },
-                  [
-                    _c(
-                      "v-list-tile-action",
-                      [_c("v-icon", [_vm._v(_vm._s(item.icon))])],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-list-tile-content",
-                      [_c("v-list-tile-title", [_vm._v(_vm._s(item.title))])],
-                      1
-                    )
-                  ],
-                  1
-                )
-              })
+              _c(
+                "v-list-group",
+                { attrs: { "no-action": "" } },
+                [
+                  _c(
+                    "v-list-tile",
+                    { attrs: { slot: "activator" }, slot: "activator" },
+                    [
+                      _c(
+                        "v-list-tile-action",
+                        [_c("v-icon", [_vm._v("restaurant")])],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-list-tile-content",
+                        [_c("v-list-tile-title", [_vm._v("Definições")])],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    { attrs: { to: "/profile-user" } },
+                    [
+                      _c(
+                        "v-list-tile",
+                        { on: { click: function($event) {} } },
+                        [
+                          _c(
+                            "v-list-tile-content",
+                            [
+                              _c("v-list", { staticClass: "text-lg-left" }, [
+                                _vm._v("Change Profile")
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    { attrs: { to: "/profile-user" } },
+                    [
+                      _c(
+                        "v-list-tile",
+                        { on: { click: function($event) {} } },
+                        [
+                          _c(
+                            "v-list-tile-content",
+                            [
+                              _c("v-list", { staticClass: "text-lg-left" }, [
+                                _vm._v("Change Profile")
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             ],
-            2
+            1
           )
         ],
         1
       ),
       _vm._v(" "),
-      _c("profile-user")
+      _c("router-view")
     ],
     1
   )

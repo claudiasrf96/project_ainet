@@ -1,5 +1,6 @@
 <template>
-    <div>asf
+    <div>
+        
     </div>
 </template>
 <script>

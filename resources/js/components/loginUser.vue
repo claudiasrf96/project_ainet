@@ -1,25 +1,22 @@
 <template>
-    <div>
-        <div class="jumbotron">
-            <h2>Login</h2>
-            <div class="form-group">
-                <label for="inputEmail">Email</label>
-                <input
-                    type="email" class="form-control" v-model="user.email" name="email" id="inputEmail" placeholder="Email address"/>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input type="password" class="form-control" v-model="user.password" name="password" id="inputPassword"/>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary" v-on:click.prevent="login">Login</a>
-                <a class="btn btn-light" v-on:click.prevent="cancel">Cancel</a>
-            </div>
-            <v-alert  v-model="showMessage"  dismissible type="error" :color="alertType">
-                {{ message }}
-            </v-alert>
-        </div>
-    </div>
+
+        <v-container>
+            <v-layout align-center >
+                <v-flex xs6 sm8 offset-sm2 >
+                    <h2>Login</h2>
+
+                    <v-text-field v-model="user.email" name="email" id="inputEmail" :counter="10" label="Name" data-vv-name="name" required></v-text-field>
+                    <v-text-field v-model="user.password" name="password" id="inputPassword" label="Password" data-vv-name="password" required ></v-text-field>
+                    
+                    <v-btn @click.prevent="login">Login</v-btn>
+                    <v-btn @click.prevent="cancel">Cancel</v-btn>
+                    <v-alert  v-model="showMessage"  dismissible type="error" :color="alertType">
+                        {{ message }}
+                    </v-alert>
+                </v-flex>
+            </v-layout>
+        </v-container>
+
 </template>
 
 <script type="text/javascript">    
@@ -42,7 +39,6 @@
                 this.showMessage = false;
                 axios.post('api/login', this.user)
                     .then(response => {
-                        
                         this.$store.commit('setToken',response.data.access_token);
                         return axios.get('api/users/me');
                     })
@@ -52,6 +48,8 @@
                         this.message = "User authenticated correctly";
                         this.showMessage = true;
                         this.alertType = "#4caf50";
+                        console.log(response.data.data);
+                        //this.loginUser(response.data.data);
                     })
                     .catch(error => {
                         this.$store.commit('clearUserAndToken');
@@ -59,11 +57,10 @@
                         this.message = "Invalid credentials";
                         this.showMessage = true;
                         this.alertType = "#ff5252";
-                        console.log(error);
                     })
             },
-            cancel(){
-                
+            loginUser(info){
+                this.$router.push({ name: 'admin',  params: {info} })
             }
         },
     }
