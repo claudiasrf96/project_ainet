@@ -1,26 +1,22 @@
 <template>
-    <div>
-        <div class="alert" :class="typeofmsg" v-if="showMessage">             
-            <button type="button" class="close-btn" v-on:click="showMessage=false">&times;</button>
-            <strong>{{ message }}</strong>
-        </div>
-        <div class="jumbotron">
-            <h2>Login</h2>
-            <div class="form-group">
-                <label for="inputEmail">Email</label>
-                <input
-                    type="email" class="form-control" v-model="user.email" name="email" id="inputEmail" placeholder="Email address"/>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input type="password" class="form-control" v-model="user.password" name="password" id="inputPassword"/>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary" v-on:click.prevent="login">Login</a>
-                <a class="btn btn-light" v-on:click.prevent="cancel">Cancel</a>
-            </div>
-        </div>
-    </div>
+
+        <v-container>
+            <v-layout align-center >
+                <v-flex xs6 sm8 offset-sm2 >
+                    <h2>Login</h2>
+
+                    <v-text-field v-model="user.email" name="email" id="inputEmail" :counter="10" label="Name" data-vv-name="name" required></v-text-field>
+                    <v-text-field :type="'password'" v-model="user.password" name="password" id="inputPassword" label="Password" data-vv-name="password"  required ></v-text-field>
+                    
+                    <v-btn @click.prevent="login">Login</v-btn>
+                    <v-btn @click.prevent="cancel">Cancel</v-btn>
+                    <v-alert  v-model="showMessage"  dismissible type="error" :color="alertType">
+                        {{ message }}
+                    </v-alert>
+                </v-flex>
+            </v-layout>
+        </v-container>
+
 </template>
 
 <script type="text/javascript">    
@@ -34,6 +30,8 @@
                 typeofmsg: "alert-success",
                 showMessage: false,
                 message: "",
+                alertType: "",
+                alertIcon: "",
             }
         },
         methods: {
@@ -49,17 +47,18 @@
                         this.typeofmsg = "alert-success";
                         this.message = "User authenticated correctly";
                         this.showMessage = true;
+                        this.alertType = "#4caf50";
+                        this.$router.push({ name: 'admin' })
                     })
                     .catch(error => {
                         this.$store.commit('clearUserAndToken');
                         this.typeofmsg = "alert-danger";
                         this.message = "Invalid credentials";
                         this.showMessage = true;
-                        console.log(error);
+                        this.alertType = "#ff5252";
                     })
             },
-            cancel(){
-                
+            loginUser(e){
             }
         },
     }

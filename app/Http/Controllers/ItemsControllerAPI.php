@@ -15,7 +15,8 @@ class ItemsControllerAPI extends Controller
      */
     public function index()
     {
-        return ItemsResource::collection(Item::all());
+       return ItemsResource::collection(Item::paginate(8));
+       //return Item::all();
     }
 
     /**

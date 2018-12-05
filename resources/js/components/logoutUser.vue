@@ -1,9 +1,9 @@
 <template>
     <div>
-        <!-- <div class="alert" :class="typeofmsg" v-if="showMessage">             
+        <div class="alert" :class="typeofmsg" v-if="showMessage">             
             <button type="button" class="close-btn" v-on:click="showMessage=false">&times;</button>
             <strong>{{ message }}</strong>
-        </div> -->
+        </div>
         <div class="jumbotron">
             <h2>Confirmar Logout</h2>
             <div class="form-group">
