@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\User;
+use Hash;
 
 class UserControllerAPI extends Controller
 { //added
     public function index(Request $request)
     {
+        return new UserResource($request->user());
+        /*
         if ($request->has('page')) {
             return UserResource::collection(User::paginate(5));
         } else {
             return UserResource::collection(User::all());
         }
-
+*/
         /*Caso não se pretenda fazer uso de Eloquent API Resources (https://laravel.com/docs/5.5/eloquent-resources), é possível implementar com esta abordagem:
         if ($request->has('page')) {
             return User::with('department')->paginate(5);;
@@ -33,6 +36,7 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
                 'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+                'username' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
                 'email' => 'required|email|unique:users,email',
                 'age' => 'integer|between:18,75',
                 'password' => 'min:3'
@@ -47,9 +51,9 @@ class UserControllerAPI extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-                'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-                'email' => 'required|email|unique:users,email,'.$id,
-                'age' => 'integer|between:18,75'
+                'name' => 'required|min:3',
+                'username' => 'required|unique:users,username,'.$id,
+                'email' => 'required|email|unique:users,email,'.$id
             ]);
         $user = User::findOrFail($id);
         $user->update($request->all());

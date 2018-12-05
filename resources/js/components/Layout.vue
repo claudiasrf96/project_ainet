@@ -10,6 +10,7 @@
                     <v-btn flat to="/login-user" >Login</v-btn>
                     <v-btn flat to="/logout-user">Logout</v-btn>
                     <v-btn flat to="/menu-admin">Profile</v-btn>
+                    <v-btn flat to="/create-user">Sign In</v-btn>
             </v-toolbar-items>
         </v-toolbar>
         <v-content fluid>
@@ -37,18 +38,32 @@
     const logout = Vue.component('logout-user', require('./logoutUser.vue'));
     const admin = Vue.component('menu-admin', require('./menuAdministrador.vue'));
     const profile = Vue.component('profile-user', require('./profileUser.vue'));
+    const change_password = Vue.component('change-password-user', require('./changePassword.vue'));
+    const create = Vue.component('create-user', require('./changeProfile.vue'));
+    const change_profile = Vue.component('change-profile-user', require('./changeProfile.vue'));
 
     const routes = [
     { path: '/', redirect: '/menu-user', name: 'root'},
     { path: '/menu-user', component: menu, name: 'menu'},
     { path: '/login-user', component: login, name: 'login'},
     { path: '/logout-user', component: logout, name: 'logout'},
+    { path: '/create-user', component: create, name: 'create'},
     { path: '/menu-admin', component: admin, name: 'admin',
      children: [
         {
           path: '/profile-user',
           component: profile,
           name: 'profile'
+        },
+        {
+          path: '/change-profile-user',
+          component: change_profile,
+          name: 'change-profile'
+        },
+        {
+          path: '/change-password-user',
+          component: change_password,
+          name: 'change-password'
         }]
         },
     ];

@@ -6,7 +6,7 @@
                     <h2>Login</h2>
 
                     <v-text-field v-model="user.email" name="email" id="inputEmail" :counter="10" label="Name" data-vv-name="name" required></v-text-field>
-                    <v-text-field v-model="user.password" name="password" id="inputPassword" label="Password" data-vv-name="password" required ></v-text-field>
+                    <v-text-field :type="'password'" v-model="user.password" name="password" id="inputPassword" label="Password" data-vv-name="password"  required ></v-text-field>
                     
                     <v-btn @click.prevent="login">Login</v-btn>
                     <v-btn @click.prevent="cancel">Cancel</v-btn>
@@ -48,8 +48,7 @@
                         this.message = "User authenticated correctly";
                         this.showMessage = true;
                         this.alertType = "#4caf50";
-                        console.log(response.data.data);
-                        //this.loginUser(response.data.data);
+                        this.$router.push({ name: 'admin' })
                     })
                     .catch(error => {
                         this.$store.commit('clearUserAndToken');
@@ -59,8 +58,7 @@
                         this.alertType = "#ff5252";
                     })
             },
-            loginUser(info){
-                this.$router.push({ name: 'admin',  params: {info} })
+            loginUser(e){
             }
         },
     }

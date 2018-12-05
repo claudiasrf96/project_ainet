@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('users/me','UserControllerAPI@index'); //antes de ele apanhar o id
+Route::put('users/{id}','UserControllerAPI@update'); //antes de ele apanhar o id
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
