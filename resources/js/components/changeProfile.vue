@@ -28,7 +28,7 @@ export default {
             this.username = ''
         },
         changeUser(){
-            axios.put('/api/users/' + this.user.id, this.user).then(response => {  
+            axios.put('/api/users/updateProfile/' + this.user.id, this.user).then(response => {  
                 this.$store.commit('setUser',response.data.data);
             })
             .catch(function(err) {

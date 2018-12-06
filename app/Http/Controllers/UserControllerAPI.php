@@ -38,7 +38,6 @@ class UserControllerAPI extends Controller
                 'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
                 'username' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
                 'email' => 'required|email|unique:users,email',
-                'age' => 'integer|between:18,75',
                 'password' => 'min:3'
             ]);
         $user = new User();
@@ -59,6 +58,37 @@ class UserControllerAPI extends Controller
         $user->update($request->all());
         return new UserResource($user);
     }
+
+    public function updatePass(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'min:3'
+        ]);
+        $user = User::findOrFail($id);
+        $user->password = Hash::make($request->password); //not hashing
+        $user->update($request->all());
+        return new UserResource($user);
+    }
+
+    public function createUser (Request $request)
+    {
+/*
+        $request->validate([
+            'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+            'username' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'min:3'
+        ]);*/
+        $user = new User();
+        $user->fill($request->all());
+        $user->password = "123";
+        $user->password = Hash::make($user->password);
+        $user->save();
+        
+        $user->update($request->all());
+        return response()->json(new UserResource($user), 201);
+    }
+
 
     public function destroy($id)
     {

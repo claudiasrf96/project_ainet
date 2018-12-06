@@ -39,7 +39,7 @@
     const admin = Vue.component('menu-admin', require('./menuAdministrador.vue'));
     const profile = Vue.component('profile-user', require('./profileUser.vue'));
     const change_password = Vue.component('change-password-user', require('./changePassword.vue'));
-    const create = Vue.component('create-user', require('./changeProfile.vue'));
+    const create = Vue.component('create-user', require('./createNewUser.vue'));
     const change_profile = Vue.component('change-profile-user', require('./changeProfile.vue'));
 
     const routes = [
