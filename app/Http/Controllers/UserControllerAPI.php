@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\User;
 use Hash;
+use Carbon\Carbon;
 
 class UserControllerAPI extends Controller
 { //added
@@ -51,9 +52,24 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
                 'name' => 'required|min:3',
-                'username' => 'required|unique:users,username,'.$id,
-                'email' => 'required|email|unique:users,email,'.$id
+                'username' => 'required|unique:users,username,'.$id
             ]);
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return new UserResource($user);
+    } 
+
+    public function updatePic(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $filename = basename($request->file('file')->store('public/profiles'));
+        $user->photo_url = $filename;
+        $user->update($request->all());
+        return new UserResource($user);
+    } 
+
+    public function updateShift(Request $request, $id)
+    {
         $user = User::findOrFail($id);
         $user->update($request->all());
         return new UserResource($user);
@@ -66,19 +82,17 @@ class UserControllerAPI extends Controller
         ]);
         $user = User::findOrFail($id);
         $user->password = Hash::make($request->password); //not hashing
-        $user->update($request->all());
         return new UserResource($user);
     }
 
     public function createUser (Request $request)
     {
-/*
         $request->validate([
-            'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'username' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'min:3'
-        ]);*/
+            'name' => 'required|min:3'.$id,
+            'username' => 'required|unique:users,username,'.$id,
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'min:3'.$id
+        ]);
         $user = new User();
         $user->fill($request->all());
         $user->password = "123";

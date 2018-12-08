@@ -4,7 +4,7 @@
             <form>
                 <v-text-field v-model="user.name" :counter="20" label="Username" required></v-text-field>
                 <v-text-field v-model="user.username" :counter="20" label="Name" required ></v-text-field>
-                <v-text-field v-model="user.email" :counter="20" label="Name" required ></v-text-field>
+                <v-text-field v-model="user.email" :counter="20" label="Email   " required ></v-text-field>
 
                 <v-select v-model="select" :items="items"  label="Item" required ></v-select>
 

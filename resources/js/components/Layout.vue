@@ -7,10 +7,10 @@
             <v-spacer></v-spacer>
             <v-toolbar-items>
                     <v-btn flat to="/menu-user" >Menu</v-btn>
-                    <v-btn flat to="/login-user" >Login</v-btn>
-                    <v-btn flat to="/logout-user">Logout</v-btn>
-                    <v-btn flat to="/menu-admin">Profile</v-btn>
-                    <v-btn flat to="/create-user">Sign In</v-btn>
+                    <v-btn v-show="!this.$store.state.user" flat to="/login-user" >Login</v-btn>
+                    <v-btn v-show="this.$store.state.user" flat to="/profile-user">Profile</v-btn>
+                    <v-btn v-show="this.$store.state.user" flat to="/create-user">Sign In</v-btn>
+                    <v-btn v-show="this.$store.state.user" flat to="/logout-user">Logout</v-btn>
             </v-toolbar-items>
         </v-toolbar>
         <v-content fluid>
@@ -41,6 +41,8 @@
     const change_password = Vue.component('change-password-user', require('./changePassword.vue'));
     const create = Vue.component('create-user', require('./createNewUser.vue'));
     const change_profile = Vue.component('change-profile-user', require('./changeProfile.vue'));
+    const create_meal = Vue.component('create-meal', require('./createNewMeal.vue'));
+    const list_meal = Vue.component('list-meal', require('./listMeal.vue'));
 
     const routes = [
     { path: '/', redirect: '/menu-user', name: 'root'},
@@ -64,7 +66,19 @@
           path: '/change-password-user',
           component: change_password,
           name: 'change-password'
-        }]
+        },
+         {
+          path: '/create-meal',
+          component: create_meal,
+          name: 'create-meal'
+        },
+         {
+          path: '/list-meal',
+          component: list_meal,
+          name: 'list-meal'
+        },
+        
+        ]
         },
     ];
 

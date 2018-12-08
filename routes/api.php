@@ -13,9 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('users/me','UserControllerAPI@index'); //antes de ele apanhar o id
+Route::middleware('auth:api')->get('users/me','UserControllerAPI@myProfile'); //antes de ele apanhar o id
+
 Route::put('users/updateProfile/{id}','UserControllerAPI@update'); //antes de ele apanhar o id updatePass createUser
+
+Route::post('users/updateProfilePic/{id}','UserControllerAPI@updatePic');
+
 Route::put('users/updatePassword/{id}','UserControllerAPI@updatePass'); 
+Route::put('users/updateShift/{id}','UserControllerAPI@updateShift'); 
 Route::post('users/createUser','UserControllerAPI@createUser'); 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -36,3 +41,4 @@ Route::middleware('auth:api')->get('teste', function () {
 });
 
 Route::get('menu', 'ItemsControllerAPI@index');
+Route::get('meals', 'WaiterControllerAPI@getMeals');

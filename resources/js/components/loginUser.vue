@@ -48,7 +48,7 @@
                         this.message = "User authenticated correctly";
                         this.showMessage = true;
                         this.alertType = "#4caf50";
-                        this.$router.push({ name: 'admin' })
+                        this.$router.push({ name: 'profile' })
                     })
                     .catch(error => {
                         this.$store.commit('clearUserAndToken');

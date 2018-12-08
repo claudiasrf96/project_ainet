@@ -3,7 +3,7 @@
         <h1>Last Shift</h1>
         <div xs6>
             <div class="block" >
-                <p class="digit">{{ shiftStart.seconds }}</p>
+                <div class="digit">{{ shiftStart.hours }}</div>
                 <p class="text">Hours</p>
             </div>
             <div class="block" >
@@ -11,22 +11,22 @@
                 <p class="text">Minutes</p>
             </div>
             <div class="block" >
-                <p class="digit">{{ shiftStart.hours  }}</p>
+                <p class="digit">{{ shiftStart.seconds  }}</p>
                 <p class="text">Seconds</p>
             </div>
         </div>
         <h1>Time Has Passed</h1>
         <div xs6>
             <div class="block" >
-                <p class="digit">{{ hours }}</p>
+                <p class="digit">{{ hoursPasted }}</p>
                 <p class="text">Hours</p>
             </div>
             <div class="block" >
-                <p class="digit">{{ minutes}}</p>
+                <p class="digit">{{ minutesPasted }}</p>
                 <p class="text">Minutes</p>
             </div>
             <div class="block" >
-                <p class="digit">{{ seconds  }}</p>
+                <p class="digit">{{ secondsPasted  }}</p>
                 <p class="text">Seconds</p>
             </div>
         </div>
@@ -37,7 +37,7 @@
         data () {
             return {
                 user: [],
-                date: "",
+                dateLastShift: "",
                 aux: "",
                 shiftStart: {
                     seconds: "",
@@ -49,29 +49,38 @@
         },
         mounted() {
             this.getUserInfor();  
-             window.setInterval(() => {
-                this.now = Math.trunc((new Date()).getTime() / 1000);
-            },1000);
+            this.$nextTick(function() {
+                window.setInterval(() => {
+                    this.now = Math.trunc((new Date()).getTime() / 1000);
+                    this.updateDate();
+                },1000);
+            })
         },
         computed: {
-            seconds() {
-                return ( this.now - this.date) % 60;
+            secondsPasted() {
+                return ( this.now - this.dateLastShift) % 60;
             },
-            minutes() {
-                return Math.trunc(( this.now - this.date) / 60) % 60;
+            minutesPasted() {
+                return Math.trunc(( this.now - this.dateLastShift) / 60) % 60;
             },
-            hours() {
-                return Math.trunc(( this.now - this.date) / 60 / 60) % 24;
+            hoursPasted() {
+                return Math.trunc(( this.now - this.dateLastShift) / 60 / 60) % 24;
             }
         },
         methods: {
             getUserInfor() {
+                console.log(this.$store.state.user.last_shift_start);
                 this.user = this.$store.state.user;
-                this.date = Math.trunc(Date.parse(this.user.last_shift_start) / 1000);
+                this.updateDate();
+            },
+            updateDate(){
+                this.dateLastShift = Math.trunc(Date.parse(this.user.last_shift_start) / 1000);
+                
+                //data atual 
                 this.aux = new Date(this.user.last_shift_start);
                 this.shiftStart.seconds = this.aux.getSeconds();
                 this.shiftStart.minutes = this.aux.getMinutes();
-                this.shiftStart.hours = this.aux.getMinutes();
+                this.shiftStart.hours = this.aux.getHours();
             }
         }
     };
@@ -102,7 +111,7 @@
 }
 
 .digit {
-    color: ##2b2e2d;;
+    color: #2b2e2d;;
     font-size: 50px;
     font-weight: 100;
     font-family: 'Roboto', serif;
