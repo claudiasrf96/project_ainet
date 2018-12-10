@@ -2,10 +2,11 @@
     <v-container  justify-center  xs12>
         <v-flex xs7 align-center offset-xs2  justify-center>
             <form>
+                
+                
+                <input type="file" id="file" ref="file"  v-on:change="handleFileUpload()"/>
                 <v-text-field v-model.lazy="user.name" :counter="20" label="Name" required ></v-text-field>
                 <v-text-field v-model.lazy="user.username" :counter="20" label="Username" required></v-text-field>
-                
-                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
 
                 <v-btn @click="changeUser; submitFile()">submit</v-btn>
                 <v-btn @click="clear">clear</v-btn>

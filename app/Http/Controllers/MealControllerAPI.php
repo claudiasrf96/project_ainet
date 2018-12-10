@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\WaiterResource;
+use App\Http\Resources\MealResource;
 use Illuminate\Http\Request;
-use App\Meals;
+use App\Meal;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class WaiterControllerAPI extends Controller
+class MealControllerAPI extends Controller
 {
     
     public function show($id)
@@ -31,26 +31,31 @@ class WaiterControllerAPI extends Controller
         return response()->json(new UserResource($user), 201);
     }
 
-    public function update(Request $request, $id)
+    public function createMeal(Request $request)
     {
-        $request->validate([
-                'name' => 'required|min:3',
-                'username' => 'required|unique:users,username,'.$id
-            ]);
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-        return new UserResource($user);
+        $meal = new Meal();
+        $meal->state = "active";
+        $meal->responsible_waiter_id = $request->input('responsible_waiter_id');
+        $meal->total_price_preview = $request->input('total_price_preview');
+        $meal->table_number = $request->input('table_number');
+        $meal->start = Carbon::now();
+
+        $meal->save();
+        
+        $meal->update($request->all());
+        return new MealResource($meal);
     }
 
-    public function destroy($id)
+    public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json(null, 204);
+       $meal = Meal::findOrFail($id);
+       $meal->state = $request->input('state');
+       $meal->table_number = 0;
+       return new MealResource($meal);
     }
-   
+
     public function getMeals(Request $request)
     {
-        return WaiterResource::collection(Meals::paginate(200));   
+        return MealResource::collection(Meal::all());   
     }
 }

@@ -33,16 +33,20 @@
 <script>
     import VueRouter from 'vue-router';
 
-    const menu = Vue.component('menu-user', require('./menu.vue'));
-    const login = Vue.component('login-user', require('./loginUser.vue'));
-    const logout = Vue.component('logout-user', require('./logoutUser.vue'));
+    const menu = Vue.component('menu-user', require('./menu/menu.vue'));
+    const login = Vue.component('login-user', require('./login/loginUser.vue'));
+    const logout = Vue.component('logout-user', require('./login/logoutUser.vue'));
     const admin = Vue.component('menu-admin', require('./menuAdministrador.vue'));
-    const profile = Vue.component('profile-user', require('./profileUser.vue'));
-    const change_password = Vue.component('change-password-user', require('./changePassword.vue'));
-    const create = Vue.component('create-user', require('./createNewUser.vue'));
-    const change_profile = Vue.component('change-profile-user', require('./changeProfile.vue'));
-    const create_meal = Vue.component('create-meal', require('./createNewMeal.vue'));
-    const list_meal = Vue.component('list-meal', require('./listMeal.vue'));
+    const profile = Vue.component('profile-user', require('./profile/profileUser.vue'));
+    const change_password = Vue.component('change-password-user', require('./profile/changePassword.vue'));
+    const create = Vue.component('create-user', require('./profile/createNewUser.vue'));
+    const change_profile = Vue.component('change-profile-user', require('./profile/changeProfile.vue'));
+    const create_meal = Vue.component('create-meal', require('./meals/createNewMeal.vue'));
+    const list_meals = Vue.component('list-meals', require('./meals/listMeals.vue'));
+    const from_meals = Vue.component('form-meals', require('./meals/formMeals.vue'));
+    const list_order = Vue.component('list-orders', require('./orders/listOrders.vue'));
+    const create_order = Vue.component('create-orders', require('./orders/createNewOrders.vue'));
+    const from_order = Vue.component('form-order', require('./orders/formOrders.vue'));
 
     const routes = [
     { path: '/', redirect: '/menu-user', name: 'root'},
@@ -67,15 +71,20 @@
           component: change_password,
           name: 'change-password'
         },
-         {
+        {
           path: '/create-meal',
           component: create_meal,
           name: 'create-meal'
         },
-         {
-          path: '/list-meal',
-          component: list_meal,
-          name: 'list-meal'
+        {
+          path: '/create-orders',
+          component: create_order,
+          name: 'create-orders'
+        },
+        {
+          path: '/list-orders',
+          component: list_order,
+          name: 'list-orders'
         },
         
         ]
