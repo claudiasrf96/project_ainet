@@ -55,15 +55,9 @@ Route::get('table', 'Restaurant_tablesControllerAPI@getTables');
 //Login
 Route::post('login', 'LoginControllerAPI@login')->name('login');
 
-
 /*
 
 Route::middleware('auth:api')->get('teste', function () {
     return response()->json(['msg'=>'Só um teste'], 200);
 });
-<<<<<<< HEAD
-
-Route::get('/menu', 'ItemsControllerAPI@index');
-=======
 */
->>>>>>> 824ffeb4ca9fd075a9cb1085c06390310f4b137b
