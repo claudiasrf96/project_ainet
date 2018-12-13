@@ -22,6 +22,13 @@ Vue.use(Vuetify)
 
 import store from './stores/global-store';
 
+import VueSocketio from 'vue-socket.io';
+
+Vue.use(new VueSocketio({
+ debug: true,
+ connection: 'http://127.0.0.1:8080'
+})); 
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

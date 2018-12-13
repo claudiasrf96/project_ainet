@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\User;
 use Hash;
+use Carbon\Carbon;
 
 class UserControllerAPI extends Controller
 { //added
@@ -38,7 +39,6 @@ class UserControllerAPI extends Controller
                 'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
                 'username' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
                 'email' => 'required|email|unique:users,email',
-                'age' => 'integer|between:18,75',
                 'password' => 'min:3'
             ]);
         $user = new User();
@@ -52,13 +52,57 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
                 'name' => 'required|min:3',
-                'username' => 'required|unique:users,username,'.$id,
-                'email' => 'required|email|unique:users,email,'.$id
+                'username' => 'required|unique:users,username,'.$id
             ]);
         $user = User::findOrFail($id);
         $user->update($request->all());
         return new UserResource($user);
+    } 
+
+    public function updatePic(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $filename = basename($request->file('file')->store('public/profiles'));
+        $user->photo_url = $filename;
+        $user->update($request->all());
+        return new UserResource($user);
+    } 
+
+    public function updateShift(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return new UserResource($user);
     }
+
+    public function updatePass(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'min:3'
+        ]);
+        $user = User::findOrFail($id);
+        $user->password = Hash::make($request->password); //not hashing
+        return new UserResource($user);
+    }
+
+    public function createUser (Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:3'.$id,
+            'username' => 'required|unique:users,username,'.$id,
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'min:3'.$id
+        ]);
+        $user = new User();
+        $user->fill($request->all());
+        $user->password = "123";
+        $user->password = Hash::make($user->password);
+        $user->save();
+        
+        $user->update($request->all());
+        return response()->json(new UserResource($user), 201);
+    }
+
 
     public function destroy($id)
     {
