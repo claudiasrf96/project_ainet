@@ -41,13 +41,35 @@ Route::get('menu', 'ItemsControllerAPI@index');
 //Meal
 Route::get('meal', 'MealControllerAPI@getMeals');
 
+Route::get('meal/getActiveMeal/{id}', 'MealControllerAPI@getActiveMeal');
+
+
+Route::get('meal/getActiveMealWithOpenOrder/{id}', 'MealControllerAPI@getActiveMealWithOpenOrder');
+
+
 Route::put('meal/update/{id}', 'MealControllerAPI@update');
 Route::post('meal/createMeal', 'MealControllerAPI@createMeal');
 
 //Order
 Route::get('order', 'OrderControllerAPI@getOrders');
 
-Route::post('order/update/{id}', 'OrderControllerAPI@update');
+//Orders Prepared   
+Route::get('order/getPreparedOrders/{id}', 'OrderControllerAPI@getPreparedOrder');
+
+Route::get('order/getPendingConfirmed/{id}', 'OrderControllerAPI@getPendingConfirmed');
+
+Route::get('order/getOrderDetails/{id}/Meal/{Mealid}', 'OrderControllerAPI@getOrderDetails');
+
+Route::post('order/createOrder', 'OrderControllerAPI@createOrder');
+
+Route::put('order/updateState/{id}', 'OrderControllerAPI@updateState');
+
+Route::delete('order/delete/{id}', 'OrderControllerAPI@delete');
+
+//Invoices
+Route::get('invoice', 'InvoiceControllerAPI@getAllInvoices');
+
+Route::get('invoice/pending', 'InvoiceControllerAPI@getPendingInvoices');
 
 //Table
 Route::get('table', 'Restaurant_tablesControllerAPI@getTables');

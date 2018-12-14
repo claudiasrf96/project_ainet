@@ -17,11 +17,13 @@
                                 </v-list>
                         </v-toolbar>
                     </router-link>
-                    <v-btn flat  block>
-                        <v-icon v-if="true" color="grey" class="v-list__tile__action">notifications</v-icon>
-                        <v-icon color="rgba(242, 38, 19, 1)" v-else>notifications_active</v-icon>
-                        <v-list-tile-title class="v-list__tile__content" >Notificações</v-list-tile-title>
-                    </v-btn>
+                    <router-link to="/notification-user">
+                        <v-btn flat  block>
+                            <v-icon v-if="true" color="grey" class="v-list__tile__action">notifications</v-icon>
+                            <v-icon color="rgba(242, 38, 19, 1)" v-else>notifications_active</v-icon>
+                            <v-list-tile-title class="v-list__tile__content" >Notificações</v-list-tile-title>
+                        </v-btn>
+                    </router-link>
                     <v-list class="pt-0" dense >
                         <v-list-group no-action>
                             <v-list-tile slot="activator"> 
@@ -30,20 +32,34 @@
                                 </v-list-tile-action>
 
                                 <v-list-tile-content>
-                                    <v-list-tile-title>Refeições</v-list-tile-title>
+                                    <v-list-tile-title>Pedido</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-                            <router-link to="/list-orders" :user="user" :onlyActiveOrders="true">
+                            <router-link  to='/create-orders'>
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Refeição</v-list>
+                                        <v-list class="text-lg-left">Criar novo Pedido</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
-                            <router-link to="/create-orders">
+                            <router-link :to="{ name: 'list-orders', params: { listState: 'cook' }}">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Criar nova Refeição</v-list>
+                                        <v-list class="text-lg-left">Lista de Pedidos (PH: COOK)</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link :to="{ name: 'list-orders', params: { listState: 'waiter' }}">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista de Pedidos (PH: WAITER)</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link to="/order-details">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista de Orders (PH: WAITER)</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -57,13 +73,34 @@
                                 </v-list-tile-action>
 
                                 <v-list-tile-content>
-                                    <v-list-tile-title>Pratos</v-list-tile-title>
+                                    <v-list-tile-title>Refeição</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-                            <router-link to="/create-meal" :user="user">
+                            <router-link to="/create-meal">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Criar novo Prato</v-list>
+                                        <v-list class="text-lg-left">Criar nova Refeição</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                        </v-list-group>
+                    </v-list>
+                    </v-list>
+                    <v-list class="pt-0" dense >
+                        <v-list-group no-action>
+                            <v-list-tile slot="activator"> 
+                                <v-list-tile-action>
+                                    <v-icon>library_books</v-icon>
+                                </v-list-tile-action>
+
+                                <v-list-tile-content>
+                                    <v-list-tile-title>Invoices</v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <router-link to="/list-invoices" >
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista de Invoices</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -105,7 +142,7 @@
                 </v-navigation-drawer>
             </v-flex>
             <v-flex xs10>
-                <router-view  ></router-view>
+                <router-view ></router-view>
             </v-flex>
         </v-layout>
     </v-container>
@@ -115,7 +152,9 @@
   export default {
     data () {
       return {
-        user: []
+        user: [],
+        pendingConfirmed: "pendingConfirmed",
+        prepared: "prepared"
       }
     },
     mounted() {
@@ -143,7 +182,7 @@
                     console.log(error);
                 });
             },
-             getCurrentDate() {
+            getCurrentDate() {
                 let d =  new Date();
                 return d.getFullYear() + "-" + (d.getMonth() + 1)  + "-" + (d.getDay() +2) + " " +d.getHours() + ":" +d.getMinutes() + ":" +d.getSeconds();
             },

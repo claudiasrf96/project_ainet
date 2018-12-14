@@ -5,9 +5,6 @@
             <v-flex xs10 sm5 md5>
                 <v-text-field v-model="user.id" disabled solo label="Responsavel"></v-text-field>
             </v-flex>
-            <v-flex xs10 sm5 md5>
-                <v-text-field  v-model="price" solo label="Preço"  required ></v-text-field>
-            </v-flex>
             <v-flex xs10 sm10 md10>
                 <v-select  :items="tables" solo v-model="select"  label="Mesa" required ></v-select>
             </v-flex>
@@ -26,7 +23,6 @@
             tables: [],
             user: [],
             select: "",
-            price: "",
             meal:  {}
         }
     },
@@ -40,10 +36,6 @@
             axios.get('api/table').then(response=>{
                 let meal = response.data.data;
                 this.tables = meal.map(a => a.table_number);
-                /*this.tables = meal.filter(function(a) {
-                    return a != 'active';
-                });
-                console.log(this.tables);*/
             }); 
         },
         getUserInfor() {
@@ -51,11 +43,11 @@
         },
         createMeal() {
             this.meal.responsible_waiter_id = this.user.id; 
-            this.meal.total_price_preview = this.price; 
             this.meal.table_number = this.select; 
             axios.post('/api/meal/createMeal', this.meal)
-                .then(function (response) {
-                    console.log(response);
+                .then(response => {
+                    this.$emit('newMeal', response.data.data);
+                    console.log(response.data.data);
                 })
                 .catch(function (error) {
                     console.log(error);

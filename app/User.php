@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'photo_url', 'shift_active', 'last_shift_start', 'last_shift_end'
+        'name', 'username', 'email', 'photo_url', 'shift_active', 'last_shift_start', 'last_shift_end'
     ];
 
     /**
@@ -31,5 +31,10 @@ class User extends Authenticatable
 
     public function findForPassport($identifier){
         return $this->orWhere('email', $identifier)->orWhere('username', $identifier)->first();
+    }
+
+    public function meal()
+    {
+        return $this->belongsTo(Meal::class);
     }
 }

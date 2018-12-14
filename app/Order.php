@@ -12,6 +12,25 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'state', 'item_id', 'meal_id', 'responsible_cook_id', 'start', 'end', 'created_at', 'updated_at'
+        'id', 'state', 'item_id', 'meal_id', 'responsible_cook_id', 'start', 'end'
     ];
+
+/*
+    public function meals()
+    {
+        return $this->belongsTo(Meal::class);
+    }*/
+
+    public function meal()
+    {
+        return $this->belongsTo(Meal::class);
+    }
+
+    public function users(){
+        return $this->hasOne(User::class , 'id', 'responsible_cook_id');
+    }
+
+    public function items(){
+        return $this->hasOne(Item::class , 'id', 'item_id');
+    }
 }

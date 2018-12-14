@@ -14,6 +14,18 @@ class MealResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+       // return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'state' => $this->state,
+            'table_number' => $this->table_number,
+            'start' => $this->start,
+            'end' => $this->end,
+            'responsible_waiter_id' => $this->responsible_waiter_id,
+            'total_price_preview' => $this->total_price_preview,
+            'orders' => $this->orders,
+            'orders_name' => OrderResource::collection($this->orders),
+            'user_table_name' => $this->users->name
+        ];
     }
 }

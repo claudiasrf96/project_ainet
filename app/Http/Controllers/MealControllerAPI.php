@@ -36,13 +36,12 @@ class MealControllerAPI extends Controller
         $meal = new Meal();
         $meal->state = "active";
         $meal->responsible_waiter_id = $request->input('responsible_waiter_id');
-        $meal->total_price_preview = $request->input('total_price_preview');
         $meal->table_number = $request->input('table_number');
         $meal->start = Carbon::now();
 
         $meal->save();
         
-        $meal->update($request->all());
+        //$meal->update($request->all());
         return new MealResource($meal);
     }
 
@@ -50,12 +49,31 @@ class MealControllerAPI extends Controller
     {
        $meal = Meal::findOrFail($id);
        $meal->state = $request->input('state');
-       $meal->table_number = 0;
        return new MealResource($meal);
     }
 
-    public function getMeals(Request $request)
+    public function getMeals()
     {
-        return MealResource::collection(Meal::all());   
+       // return MealResource::collection(Meal::where('state', 'active')->get()); 
+        return MealResource::collection(Meal::all()); //paginate(7));   
     }
+    public function getActiveMealWithOpenOrder(Request $request , $id)
+    {
+        return MealResource::collection(Meal::where('meals.state', 'active')
+                                            ->where('responsible_waiter_id', $id)
+                                            ->where('orders.state','!=', 'delivered')->get()); 
+                                            /*:select('meals.id', 'meals.state', 'table_number', 'meal_id', 'responsible_waiter_id', 'meals.start', 'meals.end')
+                                            ->from('meals')
+                                            ->where('state', 'active')
+                                            ->where('responsible_waiter_id', $id)
+                                            ->join('orders', 'id', '=' , 'meal_id')
+                                            ->where('orders.state','!=', 'delivered')); */ 
+    }
+    public function getActiveMeal( $id)
+    {
+        return MealResource::collection(Meal::where('state', 'active')
+                                            ->where('responsible_waiter_id', $id)->get());  
+    }
+
+   
 }
