@@ -55,7 +55,8 @@ class MealControllerAPI extends Controller
     public function getMeals()
     {
        // return MealResource::collection(Meal::where('state', 'active')->get()); 
-        return MealResource::collection(Meal::all()); //paginate(7));   
+       // return MealResource::collection(Meal::all()); //paginate(7));   
+       return MealResource::collection(Meal::with('orders.items')->get()); 
     }
     public function getActiveMealWithOpenOrder(Request $request , $id)
     {

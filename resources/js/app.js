@@ -21,7 +21,7 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify)
 
 import store from './stores/global-store';
-/*
+
 import VueSocketio from 'vue-socket.io';
 
 
@@ -38,7 +38,7 @@ position: 'bottom-center',
 duration: 5000,
 type: 'info',
 });
-*/
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

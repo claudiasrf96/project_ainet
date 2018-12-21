@@ -24,7 +24,10 @@ class MealResource extends JsonResource
             'responsible_waiter_id' => $this->responsible_waiter_id,
             'total_price_preview' => $this->total_price_preview,
             'orders' => $this->orders,
-            'orders_name' => OrderResource::collection($this->orders),
+            //'orders' => App\Book::with('['author', 'publisher']');
+            
+            //'orders_name' => $this->orders::with(items);
+            //'orders_name' => OrderResource::collection($this->orders),
             'user_table_name' => $this->users->name
         ];
     }
