@@ -50,9 +50,8 @@
           this.invoice = data.items
           this.totalInvoices = data.total
         })
-    },
-    mounted (){
-        this.getInvoices();
+        
+        this.getInvoices()
     },
     methods:{
       getInvoices() {
