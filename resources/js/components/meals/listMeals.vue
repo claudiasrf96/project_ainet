@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-data-table :headers="headers" :items="meals" :pagination.sync="pagination" :rows-per-page-items="pagination.rowsPerPageItems"  >
-      <template slot="items" slot-scope="props">
-        <td >{{ props.item.state }}</td>
-        <td class="text-xs-left">{{ props.item.table_number }}</td>
-        <td class="text-xs-left">{{ props.item.start }}</td>
-        <td class="text-xs-left">{{ props.item.responsible_waiter_id }}</td>
-        <td class="text-xs-left">{{ props.item.total_price_preview }}</td>
+      <template slot="items" slot-scope="props">  
+        <td >{{ props.item ? props.item.state : "" }}</td>
+        <td class="text-xs-left">{{ props.item ? props.item.table_number : ""}}</td>
+        <td class="text-xs-left">{{ props.item ? props.item.start : ""}}</td>
+        <td class="text-xs-left">{{ props.item ? props.item.user_table_name: "" }}</td>
+        <td class="text-xs-left">{{ props.item ?  props.item.total_price_preview : ""}}</td>
         <td class="justify-left layout px-0">
           <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
           <v-icon small @click="deleteItem(props.item)" >delete</v-icon>
@@ -18,15 +18,16 @@
 
 <script>
     export default {
+        props: ['new_meal'],
         data () {
             return {
                 meals: [],
                 pagination: {
-                descending: true,
-                page: 1,
-                rowsPerPage: 7,
-                sortBy: 'created_at',
-                rowsPerPageItems: [7, 15, 30]
+                    descending: true,
+                    page: 1,
+                    rowsPerPage: 7,
+                    sortBy: 'created_at',
+                    rowsPerPageItems: [7, 15, 30]
                 },
                 headers: [
                     {
@@ -44,13 +45,27 @@
             }
         },
         mounted () {
+            this.getUserInfor();
             this.getMeals();
         },
+        watch: { //quand altera execut
+            new_meal: function(newVal, oldVal){
+                this.meals.push(newVal);
+            }
+        },
+
         methods: {
             getMeals() {
-                axios.get('api/meal').then(response=>{
-                    this.meals = response.data.data; 
+              /*  axios.get('api/meal/getActiveMealWithOpenOrder/' + this.user.id).then(response=>{
+                    
+                    this.meals = response.data.data;
+                    console.log(this.meals); 
                 }); 
+              */  axios.get('api/meal').then(response=>{
+                    
+                    this.meals = response.data.data;
+                    console.log(this.meals); 
+                });
             },
             close () {
                 this.dialog = false
@@ -67,7 +82,10 @@
                 this.desserts.push(this.editedItem)
                 }
                 this.close()
-            }
+            },
+            getUserInfor() {
+                this.user = this.$store.state.user;
+            },
         }
     }
 </script>

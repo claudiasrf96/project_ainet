@@ -46,7 +46,14 @@
     const from_meals = Vue.component('form-meals', require('./meals/formMeals.vue'));
     const list_order = Vue.component('list-orders', require('./orders/listOrders.vue'));
     const create_order = Vue.component('create-orders', require('./orders/createNewOrders.vue'));
-    const from_order = Vue.component('form-order', require('./orders/formOrders.vue'));
+    const from_order = Vue.component('form-order', require('./orders/formOrders.vue')); 
+    const order_details = Vue.component('order-details', require('./orders/orderDetails.vue'));
+    
+    const list_invoices = Vue.component('list-invoices', require('./invoices/listInvoices.vue'));
+
+    
+    const notification = Vue.component('notification-user', require('./notifications/notifications.vue')); 
+
 
     const routes = [
     { path: '/', redirect: '/menu-user', name: 'root'},
@@ -82,11 +89,27 @@
           name: 'create-orders'
         },
         {
-          path: '/list-orders',
+          path: '/list-orders/:listState',
           component: list_order,
-          name: 'list-orders'
+          name: 'list-orders',
+          props: true
         },
-        
+         {
+          path: '/notification-user',
+          component: notification,
+          name: 'notification-user'
+        },
+        {
+          path: '/order-details',
+          component: order_details,
+          name: 'order-details'
+        },
+         {
+          path: '/list-invoices',
+          component: list_invoices,
+          name: 'list-invoices'
+        },
+
         ]
         },
     ];

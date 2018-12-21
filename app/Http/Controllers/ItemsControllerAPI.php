@@ -19,6 +19,14 @@ class ItemsControllerAPI extends Controller
        //return Item::all();
     }
 
+    public function getDish(){
+
+    }
+
+    public function getDrink(){
+
+    }
+
     /**
      * Show the form for creating a new resource.       
      *

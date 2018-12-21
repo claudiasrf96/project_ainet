@@ -46,7 +46,8 @@
                 menus: [],
                 curenntPage: 1,
                 pagination: [],
-                selectedId: ""
+                selectedId: "",
+                lastPage: Number
             }
         },created () {
             axios.get('/api/menu').then(response =>(
@@ -56,11 +57,12 @@
             ))
         }, 
         methods: {
-            makePagination(e) {
-                axios.get('/api/menu?page='+ e).then(response =>(
+            makePagination(page) {
+                axios.get('/api/menu?page='+ page).then(response =>(
                     this.menus = response.data.data,
                     this.curenntPage = response.data.meta.current_page,
-                    this.pagination = response.data.links
+                    this.pagination = response.data.link,
+                    this.lastPage = response.data.meta.lastPage
                ))
             }
         },

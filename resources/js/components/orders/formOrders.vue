@@ -37,22 +37,21 @@
         }
     },
      mounted () {
-        this.getMeals();
+        this.getUserInfo();
         this.getMenuItems();
-        this.getUserInfor();
+        this.getMeals();
     }
     ,
     methods: {
         getMeals() {
-            axios.get('api/meal').then(response=>{
-                let data = response.data.data;
-                let filterData = data.filter(a => a.state  == 'active');
+            console.log(this.user.id);
+            axios.get('api/meal/getActiveMeal/' + this.user.id ).then(response=>{
+                let filterData = response.data.data
                 this.meals = filterData.map(a => a.id);
-                console.log(this.meals);
             }); 
         },
         getMenuItems() {
-            axios.get('api/menu').then(response=>{
+            axios.get('api/menu').then(response=>{ //todo
                 let data = response.data.data;
                 let filterData = data.filter(a => a.type  == 'dish');
                 this.dishes = filterData.map(a => "Id: " + a.id + " (" + a.name + ")");
@@ -60,15 +59,25 @@
                 this.drinks = filterData.map(a => "Id: " + a.id + " (" + a.name + ")");
             }); 
         },
-        getUserInfor() {
+        getUserInfo() {
             this.user = this.$store.state.user;
         },
         createMeal() {
-            this.order.item_id = selectDish;
-            this.order.meal_id = selectMeal; //perguntar como meter isto na bD XD //todo
-            axios.post('/api/order/createOrder', this.meal)
-                .then(function (response) {
-                    console.log(response);
+            this.order.state = 'pending';
+            this.order.responsible_cook_id = this.user.id;
+            this.order.meal_id = this.selectMeal;
+            this.order.item_id = this.selectDish.substring(4, 6).trim();
+            axios.post('/api/order/createOrder', this.order)
+                .then(response => {
+                    this.$emit('new_order', response.data.data);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            this.order.item_id = this.selectDrink.substring(4, 6).trim();
+            axios.post('/api/order/createOrder', this.order)
+                .then(response => {
+                    this.$emit('new_order', response.data.data);
                 })
                 .catch(function (error) {
                     console.log(error);
