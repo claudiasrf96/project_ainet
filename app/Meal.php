@@ -26,6 +26,11 @@ class Meal extends Model
     public function users(){
         return $this->hasOne(User::class , 'id', 'responsible_waiter_id');
     }
+
+    public function invoices()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
     
     
 /*

@@ -17,30 +17,35 @@ class InvoiceControllerAPI extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {  
+        $request->validate([
+                'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+                'nif' => 'required|integer|min:9,'
+            ]);
+        $invoice = Invoice::findOrFail($id);
+        $invoice->fill($request->all());
+        $invoice->save();
+        return new InvoiceResource($invoice);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getAllInvoices()
+    public function getAllInvoices(Request $request)
+    { 
+        $invoices = Invoice::where('state', 'pending')->with('meals.users')->paginate($request->get('page_size'));
+        return InvoiceResource::collection($invoices);
+        //return InvoiceResource::collection($invoices);
+    }
+
+    public function getDetailInfoAboutInvoices(Request $request)
     {
-        return InvoiceResource::collection(Invoice::paginate(8));
+        $invoices = Invoice::with('invoiceItems.items')->with('meals.users')->paginate($request->get('page_size'));
+
+        return InvoiceResource::collection($invoices);
     }
 
     public function getPendingInvoices()
     {
-        return InvoiceResource::collection(Invoice::Select('invoices.date', 'meals.table_number', 'meals.responsible_waiter_id', 
-                                            'meals.total_price_preview', 'invoice_items.item_id', 'items.name', 'invoice_items.unit_price',
-                                             'invoice_items.sub_total_price')
-                                            ->from('invoices')
-                                            ->join('invoice_items', 'invoice_id', '=' , 'invoices.id')
-                                            ->join('meals', 'meals.id', '=' , 'meal_id')
-                                            ->join('items', 'items.id', 'item_id')->paginate(7));
+        $invoices = Invoice::where('state', 'pending')->paginate(10);
+        return InvoiceResource::collection($invoices);
     }
 
 }

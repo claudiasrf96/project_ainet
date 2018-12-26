@@ -14,4 +14,9 @@ class Item extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function invoiceItem()
+    {
+        return $this->belongsTo(InvoiceItem::class);
+    }
 }

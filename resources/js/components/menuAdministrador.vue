@@ -97,10 +97,17 @@
                                     <v-list-tile-title>Invoices</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-                            <router-link to="/list-invoices" >
+                            <router-link to="/fill-invoices" >
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
                                         <v-list class="text-lg-left">Lista de Invoices</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link to="/details-invoices" >
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Detalhes sobre Invoices</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>

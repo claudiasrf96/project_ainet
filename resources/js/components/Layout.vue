@@ -49,8 +49,10 @@
     const from_order = Vue.component('form-order', require('./orders/formOrders.vue')); 
     const order_details = Vue.component('order-details', require('./orders/orderDetails.vue'));
     
+    
+    const fill_invoices = Vue.component('fill-invoices', require('./invoices/fillInvoice.vue'));
     const list_invoices = Vue.component('list-invoices', require('./invoices/listInvoices.vue'));
-
+    const details_invoices = Vue.component('details-invoices', require('./invoices/invoiceDetails.vue'));
     
     const notification = Vue.component('notification-user', require('./notifications/notifications.vue')); 
 
@@ -108,6 +110,16 @@
           path: '/list-invoices',
           component: list_invoices,
           name: 'list-invoices'
+        },
+         {
+          path: '/details-invoices',
+          component: details_invoices,
+          name: 'details-invoices'
+        },
+        {
+          path: '/fill-invoices',
+          component: fill_invoices,
+          name: 'fill-invoices'
         },
 
         ]
