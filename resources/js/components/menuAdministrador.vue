@@ -117,6 +117,26 @@
                         <v-list-group no-action>
                             <v-list-tile slot="activator"> 
                                 <v-list-tile-action>
+                                    <v-icon>people</v-icon>
+                                </v-list-tile-action>
+
+                                <v-list-tile-content>
+                                    <v-list-tile-title>Managment</v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                            <router-link to="/manager-dasbord">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Criar nova Refeição</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                        </v-list-group>
+                    </v-list>
+                    <v-list class="pt-0" dense >
+                        <v-list-group no-action>
+                            <v-list-tile slot="activator"> 
+                                <v-list-tile-action>
                                     <v-icon>settings</v-icon>
                                 </v-list-tile-action>
 

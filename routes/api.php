@@ -17,16 +17,18 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('users/me','UserControllerAPI@myProfile'); //antes de ele apanhar o id
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 Route::middleware('auth:api')->post('logout','LoginControllerAPI@logout');
 
 
 
 //User
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});*/
 
+Route::get('/user', 'UserControllerAPI@getAllUsers');
 Route::put('users/updateProfile/{id}','UserControllerAPI@update'); //antes de ele apanhar o id updatePass createUser
 
 Route::post('users/updateProfilePic/{id}','UserControllerAPI@updatePic');

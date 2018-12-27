@@ -52,7 +52,11 @@
     
     const fill_invoices = Vue.component('fill-invoices', require('./invoices/fillInvoice.vue'));
     const list_invoices = Vue.component('list-invoices', require('./invoices/listInvoices.vue'));
-    const details_invoices = Vue.component('details-invoices', require('./invoices/invoiceDetails.vue'));
+    const details_invoices = Vue.component('details-invoices', require('./invoices/invoiceDetails.vue')); 
+    
+    const manager_dasbord = Vue.component('manager-dasboard', require('./management/managerDashboard.vue'));
+    const list_users = Vue.component('list-users', require('./management/listUsers.vue'));
+    const form_user = Vue.component('form-user', require('./management/formUser.vue'));
     
     const notification = Vue.component('notification-user', require('./notifications/notifications.vue')); 
 
@@ -121,7 +125,21 @@
           component: fill_invoices,
           name: 'fill-invoices'
         },
-
+        {
+          path: '/manager-dasbord',
+          component: manager_dasbord,
+          name: 'manager-dasbord'
+        },
+        {
+          path: '/list-users',
+          component: list_users,
+          name: 'list-users'
+        },
+        {
+          path: '/form-user',
+          component: form_user,
+          name: 'form-user'
+        },
         ]
         },
     ];

@@ -49,6 +49,7 @@ class MealControllerAPI extends Controller
     {
        $meal = Meal::findOrFail($id);
        $meal->state = $request->input('state');
+       $meal->update($request->all());
        return new MealResource($meal);
     }
 

@@ -1,7 +1,6 @@
 <template>
 <div >
     <v-parallax :src="'storage/banners/refeicao-2.jpg'" height="250">
-            <form-order v-show="isActive"></form-order>
     </v-parallax>
     <list-invoices ></list-invoices> 
 </div>

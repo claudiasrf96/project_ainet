@@ -28,6 +28,11 @@ class UserControllerAPI extends Controller
         }*/
     }
 
+    public function getAllUsers()
+    {
+        return new UserResource(User::All());
+    }
+
     public function show($id)
     {
         return new UserResource(User::find($id));

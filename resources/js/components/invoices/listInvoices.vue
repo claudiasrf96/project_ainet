@@ -7,6 +7,7 @@
         <td class="text-xs-left">{{ props.item.meals.users.name  }}</td>
         <td class="text-xs-left">{{ props.item.meals.total_price_preview }}</td>
         <v-btn round color="primary" v-if="!props.expanded && emptyCheker(props.item) && updatedInvoice == 0"  style="float: left;" dark primary hide-details @click="props.expanded = !props.expanded"> Concluir  &emsp; <v-icon dark >edit</v-icon></v-btn>
+        <v-btn round color="amber" v-else-if="!props.expanded && pendingCheker && emptyCheker(props.item) == false"  style="float: left;" dark primary hide-details @click="props.item.state = 'paid'; sendInvoice(props.item)" > Paid  &emsp; <v-icon dark >send</v-icon></v-btn>
         
         <v-flex xs0 sm10 md10 v-else >
           <v-progress-linear :indeterminate="true" ></v-progress-linear>
@@ -23,7 +24,7 @@
                     <v-text-field v-model="props.item.name" label="Nome"  required ></v-text-field> <!-- :rules="emailRules" -->
                   </v-flex>
                   <v-flex xs12 sm3 md3 s>
-                    <v-btn round color="green" style="margin-top: 20px;" dark hide-details @click="confirmInvoice(props.item.id); props.expanded = !props.expanded">  Confirmar  &emsp; <v-icon dark>done</v-icon></v-btn>
+                    <v-btn round color="green" style="margin-top: 20px;" dark hide-details @click="confirmInvoice(props.item); props.expanded = !props.expanded">  Confirmar  &emsp; <v-icon dark>done</v-icon></v-btn>
                     <v-btn round color="red" style="margin-top: 20px;" dark hide-details @click="props.expanded = !props.expanded">  Cancelar  &emsp; <v-icon dark>close</v-icon></v-btn>
                   </v-flex>
                 </v-layout>
@@ -88,8 +89,9 @@
           });
         })
       },
-      confirmInvoice(id){
-        axios.put('api/invoice/update/' + this.invoice[id -1].id, this.invoice[id -1]).then(response => {  
+      confirmInvoice(invoiceAtual){
+        const index = this.invoice.indexOf(invoiceAtual);
+        axios.put('api/invoice/update/' + this.invoice[index].id, this.invoice[index]).then(response => {  
           this.updatedInvoice = true;
         })
         .catch(function(err) {
@@ -97,8 +99,27 @@
 
         });
       },
-      emptyCheker(item){
+      sendInvoice(invoiceAtual){
+        const index = this.invoice.indexOf(invoiceAtual);
+        axios.put('api/invoice/update/' + this.invoice[index].id, this.invoice[index]).then(response => {  
+          this.invoice.splice(index, 1);
+              console.log(response.data);
+          let meal = response.data.data.meals;
+          meal.state = 'paid';
+          axios.put('api/meal/update/' + meal.id, meal).then(response => {  
+              console.log(response.data);
+          });
+        })
+        .catch(function(err) {
+          console.log(err);
+
+        });
+      },
+      emptyCheker(item){ 
         return (item.nif === "" || item.name === "" );
+      },
+      pendingCheker(item){
+        return item.state === "pending";
       }
       
     /*  sockets: {
