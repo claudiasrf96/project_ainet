@@ -37,8 +37,8 @@ Vue.use(Toasted, {
 position: 'bottom-center',
 duration: 5000,
 type: 'info',
-});
-*/
+});*/
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

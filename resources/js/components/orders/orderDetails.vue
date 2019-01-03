@@ -16,8 +16,8 @@
         <v-data-table :headers="headers2" :items="props.item.orders" item-key="id" >
             <template  slot="items" slot-scope="props" >
                 <td >{{ props.item.state}}</td>
-                <td class="text-xs-left"> {{ props.item.responsible_cook_id }}</td>
-                <td class="text-xs-left">{{ props.item.item_id }}</td>
+                <td class="text-xs-left"> {{ props.item.users.name }}</td>
+                <td class="text-xs-left">{{ props.item.items.name }}</td>
             </template>
         </v-data-table>
       </v-card>

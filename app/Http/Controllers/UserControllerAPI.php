@@ -28,6 +28,11 @@ class UserControllerAPI extends Controller
         }*/
     }
 
+    public function getAllUsers()
+    {
+        return new UserResource(User::All());
+    }
+
     public function show($id)
     {
         return new UserResource(User::find($id));
@@ -103,6 +108,29 @@ class UserControllerAPI extends Controller
         return response()->json(new UserResource($user), 201);
     }
 
+    //Block
+    public function blockUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->blocked = "1";
+        return new UserResource($user);
+    }
+
+    //Unblock
+    public function unBlockUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->blocked = "0";
+        return new UserResource($user);
+    }
+
+    //Delete
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return new UserResource($user);
+    }
 
     public function destroy($id)
     {
