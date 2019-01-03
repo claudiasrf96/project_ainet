@@ -40,6 +40,9 @@ Route::post('users/createUser','UserControllerAPI@createUser');
 //Menu Items
 Route::get('menu', 'ItemsControllerAPI@index');
 
+//Menu Items
+Route::get('menu/update/{id}', 'ItemsControllerAPI@update');
+
 //Meal
 Route::get('meal', 'MealControllerAPI@getMeals');
 

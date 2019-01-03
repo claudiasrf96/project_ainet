@@ -127,7 +127,7 @@
                             <router-link to="/manager-dasbord">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Criar nova Refeição</v-list>
+                                        <v-list class="text-lg-left">List users</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>

@@ -58,6 +58,8 @@
     const list_users = Vue.component('list-users', require('./management/listUsers.vue'));
     const form_user = Vue.component('form-user', require('./management/formUser.vue'));
     
+    const form_food = Vue.component('form-food', require('./menu/formFood.vue'));
+    
     const notification = Vue.component('notification-user', require('./notifications/notifications.vue')); 
 
 
@@ -139,6 +141,11 @@
           path: '/form-user',
           component: form_user,
           name: 'form-user'
+        },
+        {
+          path: '/form-food',
+          component: form_food,
+          name: 'form-food'
         },
         ]
         },
