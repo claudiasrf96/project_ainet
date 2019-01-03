@@ -14,6 +14,11 @@
         <td class="text-xs-left">{{ props.item.name }}</td>
         <td class="text-xs-left">{{ props.item.username }}</td>
         <td class="text-xs-left">{{ props.item.email }}</td> 
+        <td class="text-xs-left">
+            <v-btn round color="orange"  dark hide-details @click="blockUser(props.item); props.expanded = !props.expanded">  Block  &emsp; <v-icon dark>done</v-icon></v-btn>
+            <v-btn round color="green"  dark hide-details @click="unblockUser(props.item); props.expanded = !props.expanded">  Unblock  &emsp; <v-icon dark>done</v-icon></v-btn>
+            <v-btn round color="red"  dark hide-details @click="deleteUser(props.item); props.expanded = !props.expanded">  Delete  &emsp; <v-icon dark>done</v-icon></v-btn>
+        </td>        
       </template>
       <v-alert slot="no-results" :value="true" color="error" icon="warning">
         Your search for "{{ search }}" found no results.
@@ -46,15 +51,16 @@
                 },
                 { text: 'Username', value: 'username', sortable: false },
                 { text: 'Email', value: 'email', sortable: false },
+                { sortable: false },
                 ]
             }
         },
         mounted () {
             this.getUserInfor();
-            this.getMeals();
+            this.getUsers();
         },
         methods: {
-            getMeals() {
+            getUsers() {
                 axios.get('api/user').then(response=>{
                     
                     this.users = response.data.data;
@@ -64,6 +70,24 @@
             getUserInfor() {
                 this.user = this.$store.state.user;
             },
+            blockUser(){
+                axios.get('api/user/block').then(response=>{
+                    this.users = response.data.data;
+                    console.log(this.users); 
+                });
+            },
+            unblockUser(){
+                axios.get('api/user/unblock').then(response=>{
+                    this.users = response.data.data;
+                    console.log(this.users); 
+                });
+            },
+            deleteUser(){
+                axios.get('api/user/delete').then(response=>{
+                    this.users = response.data.data;
+                    console.log(this.users); 
+                });
+            }
         }
     }
 </script>

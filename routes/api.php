@@ -37,6 +37,9 @@ Route::put('users/updatePassword/{id}','UserControllerAPI@updatePass');
 Route::put('users/updateShift/{id}','UserControllerAPI@updateShift'); 
 Route::post('users/createUser','UserControllerAPI@createUser'); 
 
+Route::post('users/createUser','UserControllerAPI@createUser'); 
+
+
 //Menu Items
 Route::get('menu', 'ItemsControllerAPI@index');
 
