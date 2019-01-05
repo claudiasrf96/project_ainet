@@ -86,6 +86,19 @@
             getUserInfor() {
                 this.user = this.$store.state.user;
             },
-        }
-    }
+
+            changeStyleTemp: function(orderAlterada, type, time_ms){
+                    this.meals.push(orderAlterada);
+                setTimeout( () => {
+                this.changeType = "";
+                this.tempStyleOrder = null;
+                }, time_ms)
+          },
+      },
+      sockets: {
+        meal_created(createdMeal){
+            this.changeStyleTemp(createdMeal[0], createdMeal[1], 3000); 
+        },  	
+      },
+}
 </script>

@@ -107,7 +107,14 @@
                             <router-link to="/details-invoices" >
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Detalhes sobre Invoices</v-list>
+                                        <v-list class="text-lg-left">Detalhes sobre Invoices</v-list> 
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link to="/details-manager-invoices" >
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Detalhes sobre Invoices (PH: Admin)</v-list> 
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -214,7 +221,7 @@
                 return d.getFullYear() + "-" + (d.getMonth() + 1)  + "-" + (d.getDay() +2) + " " +d.getHours() + ":" +d.getMinutes() + ":" +d.getSeconds();
             },
             sendNotification(){
-
+                
             }
       }
   }

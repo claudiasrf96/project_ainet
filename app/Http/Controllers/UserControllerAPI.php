@@ -113,14 +113,16 @@ class UserControllerAPI extends Controller
     {
         $user = User::findOrFail($id);
         $user->blocked = "1";
+        $user->save();
         return new UserResource($user);
     }
 
     //Unblock
-    public function unBlockUser($id)
+    public function unblockUser($id)
     {
         $user = User::findOrFail($id);
         $user->blocked = "0";
+        $user->save();
         return new UserResource($user);
     }
 

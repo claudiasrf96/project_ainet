@@ -35,6 +35,13 @@ class InvoiceControllerAPI extends Controller
         //return InvoiceResource::collection($invoices);
     }
 
+    public function getAllInvoicesInfoManager(Request $request)
+    { 
+        $invoices = Invoice::where('state', 'pending')->with('meals.orders')->with('meals.users')->paginate($request->get('page_size'));
+        return InvoiceResource::collection($invoices);
+        //return InvoiceResource::collection($invoices);
+    }
+
     public function getDetailInfoAboutInvoices(Request $request)
     {
         $invoices = Invoice::with('invoiceItems.items')->with('meals.users')->paginate($request->get('page_size'));

@@ -1,7 +1,7 @@
 
 <template>
     <div>
-       <form-food :editing_food="editing_food" :selected_item="selected_item" ></form-food>
+       <form-food :editing_food="editing_food" :selected_item="selected_item" @closeEdit="editingFood" ></form-food>
         <v-layout align-center row wrap xs12>
             <v-flex xs3   v-for="menu in menus" v-bind:key = "menu.id">
                 
@@ -26,7 +26,7 @@
                                     </v-flex>
                                 </v-container>
                                 <v-flex xs12 class="text-xs-right">
-                                    <v-btn round color="green" style="margin-top: 20px;" dark hide-details @click="editingFood(); selected_item = menu" >  Editar &emsp; <v-icon dark>edit</v-icon></v-btn>
+                                    <v-btn round color="green" :disabled="editing_food" style="margin-top: 20px;"  @click="editingFood(); selected_item = menu" >  Editar &emsp; <v-icon dark>edit</v-icon></v-btn>
                                 </v-flex>
                         </v-card-title>
                         
@@ -71,11 +71,9 @@
                ))
             },
             editingFood(){
-                if(this.editing_food == false){
-                    this.editing_food = !this.editing_food;
-                    console.log(this.editing_food);
-                }
-            }
+                this.editing_food = !this.editing_food;
+            },
+
         },
     }
 </script>

@@ -37,14 +37,21 @@ Route::put('users/updatePassword/{id}','UserControllerAPI@updatePass');
 Route::put('users/updateShift/{id}','UserControllerAPI@updateShift'); 
 Route::post('users/createUser','UserControllerAPI@createUser'); 
 
-Route::post('users/createUser','UserControllerAPI@createUser'); 
+Route::put('user/blockUser/{id}','UserControllerAPI@blockUser'); 
+Route::put('user/unblockUser/{id}','UserControllerAPI@unblockUser'); 
+Route::put('user/deleteUser/{id}','UserControllerAPI@deleteUser'); 
 
 
 //Menu Items
 Route::get('menu', 'ItemsControllerAPI@index');
 
 //Menu Items
-Route::get('menu/update/{id}', 'ItemsControllerAPI@update');
+Route::put('menu/update/{id}', 'ItemsControllerAPI@update');
+
+
+
+
+
 
 //Meal
 Route::get('meal', 'MealControllerAPI@getMeals');
@@ -81,7 +88,12 @@ Route::put('invoice/update/{id}', 'InvoiceControllerAPI@update');
 
 Route::get('invoice/pending', 'InvoiceControllerAPI@getPendingInvoices');
 
-Route::get('invoice/invoiceInfo', 'InvoiceControllerAPI@getDetailInfoAboutInvoices'); 
+Route::get('invoice/invoiceInfo', 'InvoiceControllerAPI@getDetailInfoAboutInvoices');
+
+
+Route::get('invoice/invoiceInfo/manager', 'InvoiceControllerAPI@getAllInvoicesInfoManager');
+
+
 
 //Invoice Item
 Route::get('invoiceItem', 'InvoiceItemControllerAPI@getAllinvoiceItems');

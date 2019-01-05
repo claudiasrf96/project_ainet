@@ -21,7 +21,7 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify)
 
 import store from './stores/global-store';
-/*
+
 import VueSocketio from 'vue-socket.io';
 
 
@@ -34,10 +34,10 @@ Vue.use(new VueSocketio({
 })); 
 
 Vue.use(Toasted, {
-position: 'bottom-center',
-duration: 5000,
-type: 'info',
-});*/
+    position: 'bottom-center',
+    duration: 5000,
+    type: 'info',
+});
 
 /**
  * The following block of code may be used to automatically register your
@@ -82,6 +82,15 @@ const app = new Vue({
             }
             this.msgGlobalText = "";
         },
+        sendDepMsg: function(){
+            console.log('Sending to the server (only same department) this message: "' + this.msgDepText + '"');
+            if (this.$store.state.user === null) {
+                this.$toasted.error('User is not logged in. Department is unknown!');            
+            } else {
+                this.$socket.emit('msg_to_manager', this.msgDepText, this.$store.state.user);
+            }
+            this.msgDepText = "";
+        }
     },
     sockets:{   
         connect(){
@@ -94,5 +103,14 @@ const app = new Vue({
            // let sourceName = dataFromServer;
             this.$toasted.show('Message "' +dataFromServer); //doing it
         }, 
-    }
+        order_changed(dataFromServer){
+            this.$toasted.show('Order ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
+        },
+        order_deleted(dataFromServer){
+            this.$toasted.show('Order ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
+        },
+        meal_created(dataFromServer){
+            this.$toasted.show('Meal ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
+        },
+    }       
 });

@@ -46,13 +46,15 @@
             this.meal.table_number = this.select; 
             axios.post('/api/meal/createMeal', this.meal)
                 .then(response => {
+                    this.$socket.emit('meal_created', response.data.data, "Created");
                     this.$emit('newMeal', response.data.data);
-                    console.log(response.data.data);
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
         }
+
+        
     }
   }
 </script>

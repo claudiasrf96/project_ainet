@@ -19,11 +19,15 @@
 </template>
 
 <script>
+
+
   export default {
     props: ['new_order', 'listState'],
     data () {
       return {
         orders: [],
+				changeType: "",
+				tempStyleUser: null,
         pagination: {
           descending: true,
           page: 1,
@@ -70,65 +74,86 @@
         this.getOrders(); 
       }
     },
+    
     methods: {
-      getOrders() {
-           
-      if(this.listState == 'cook'){
-          axios.get('api/order/getPendingConfirmed/' + this.user.id).then(response=>{
-            this.orders = response.data.data;
-            console.log(this.orders);
-          });
-      }else if(this.listState == 'waiter'){
-          axios.get('api/order/getPreparedOrders/'+ this.user.id).then(response=>{
-            let data = response.data.data;
-            this.orders = data;
-          });
-      }else{
-         axios.get('api/order').then(response=>{
-            let data = response.data.data;
-            this.orders = data;
-          });
-      }
-      },
-      markAsPrepared(e){
-        console.log(e);
-            e.state = 'prepared';
-              axios.put('api/order/updateState/'+ e.id, e).then(response => {  
-            })
-      },
-      markAsInPreparation(e){
-          e.state = 'in preparation';
-             axios.put('api/order/updateState/' + e.id, e).then(response => {  
-          })
-      },
-      deletOrder(e){
-          const index = this.orders.indexOf(e);
-          this.orders.splice(index, 1);
-          axios.delete('api/order/delete/' + e.id).then(response=> {
-              console.log(response);
-          });
-      },
-      markAsDeliverd(e){
-          e.state = 'delivered';
-          axios.put('api/order/updateState/' + e.id, e).then(response => {
-              console.log(response.data.data);
-          }),
-          setTimeout(() =>
-              this.orders.splice(this.orders.indexOf(e), 1)
-          ,2500);
-      },
-      getUserInfor() {
-            this.user = this.$store.state.user;
+        getOrders() {
+          if(this.listState == 'cook'){
+              axios.get('api/order/getPendingConfirmed/' + this.user.id).then(response=>{
+                this.orders = response.data.data;
+                console.log(this.orders);
+              });
+          }else if(this.listState == 'waiter'){
+              axios.get('api/order/getPreparedOrders/'+ this.user.id).then(response=>{
+                let data = response.data.data;
+                this.orders = data;
+              });
+          }else{
+            axios.get('api/order').then(response=>{
+                let data = response.data.data;
+                this.orders = data;
+              });
+          }
         },
-      makePagination(page) {
-          axios.get('api/order?page='+ page).then(response =>(
-              this.orders = response.data.data,
-              this.curenntPage = response.data.meta.current_page,
-              this.pagination = response.data.link,
-              this.lastPage = response.data.meta.lastPage
-      ))
-      }
-  }
+        markAsPrepared(e){
+          console.log(e);
+              e.state = 'prepared';
+                axios.put('api/order/updateState/'+ e.id, e).then(response => {  
+                  this.$socket.emit('order_changed', e, "Prepared");
+              })
+        },
+        markAsInPreparation(e){
+            e.state = 'in preparation';
+              axios.put('api/order/updateState/' + e.id, e).then(response => { 
+                this.$socket.emit('order_changed', e, "Being Prepared");
+            })
+        },
+        deletOrder(e){
+            const index = this.orders.indexOf(e);
+            this.orders.splice(index, 1);
+            axios.delete('api/order/delete/' + e.id).then(response=> {
+                this.$socket.emit('order_deleted', e, "Deleted");
+            });
+        },
+        markAsDeliverd(e){
+            e.state = 'delivered';
+            axios.put('api/order/updateState/' + e.id, e).then(response => {
+              this.$socket.emit('order_changed', e, "Delivered");
+            }),
+            setTimeout(() =>
+                this.orders.splice(this.orders.indexOf(e), 1)
+            ,2500);
+        },
+        getUserInfor() {
+              this.user = this.$store.state.user;
+        },
+        makePagination(page) {
+            axios.get('api/order?page='+ page).then(response =>(
+                this.orders = response.data.data,
+                this.curenntPage = response.data.meta.current_page,
+                this.pagination = response.data.link,
+                this.lastPage = response.data.meta.lastPage
+            ))
+        },
+        changeStyleTemp: function(orderAlterada,index, type, time_ms){
+            this.orders[index].state = orderAlterada.state;
+            setTimeout( () => {
+              this.changeType = "";
+              this.tempStyleOrder = null;
+            }, time_ms)
+          },
+      },
+      sockets: {
+        order_changed(changedOrder){
+          let index = this.orders.findIndex(x => x.id === changedOrder[0].id);
+          if (index !== null) {
+            this.changeStyleTemp(changedOrder[0] ,index, changedOrder[1], 3000);
+          }          
+        },     
+        order_deleted(deletedOrder){
+          let index = this.orders.findIndex(x => x.id === deletedOrder[0].id);
+          this.orders.splice(index , 1);     
+        },        	
+      },
 }
 </script>
 <style>

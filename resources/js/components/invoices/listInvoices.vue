@@ -81,7 +81,6 @@
           //   axios.get('api/invoice/pending').then(response=>{ 
             let items = response.data.data;
             let total = response.data.meta.total;
-           
             resolve({
               items,
               total
@@ -92,22 +91,23 @@
       confirmInvoice(invoiceAtual){
         const index = this.invoice.indexOf(invoiceAtual);
         axios.put('api/invoice/update/' + this.invoice[index].id, this.invoice[index]).then(response => {  
-          this.updatedInvoice = true;
+          this.updatedInvoice = true;   
+          this.$socket.emit('invoice_changed', response.data.data, "Confirmed");   
         })
         .catch(function(err) {
           console.log(err);
-
         });
       },
       sendInvoice(invoiceAtual){
+        
         const index = this.invoice.indexOf(invoiceAtual);
         axios.put('api/invoice/update/' + this.invoice[index].id, this.invoice[index]).then(response => {  
           this.invoice.splice(index, 1);
-              console.log(response.data);
           let meal = response.data.data.meals;
           meal.state = 'paid';
+          this.$socket.emit('invoice_sent', response.data.data, "Sent");     
+
           axios.put('api/meal/update/' + meal.id, meal).then(response => {  
-              console.log(response.data);
           });
         })
         .catch(function(err) {
@@ -115,24 +115,36 @@
 
         });
       },
+
+      //Check vall
       emptyCheker(item){ 
         return (item.nif === "" || item.name === "" );
       },
       pendingCheker(item){
         return item.state === "pending";
-      }
-      
-    /*  sockets: {
+      },
+
+      //Soket
+      changeStyleTemp: function(changedInvoice, index, type, time_ms){
+            this.invoice[index].nif = changedInvoice.nif;
+            this.invoice[index].name = changedInvoice.name;
+        setTimeout( () => {
+          this.changeType = "";
+          this.tempStyleOrder = null;
+        }, time_ms)
+      },
+    },
+    sockets: {
         invoice_changed(changedInvoice){
-          let refToChangedInvoice =  invoice.filter(obj => {return obj === changedInvoice})
-          if (refToChangedInvoice !== null) {
-            Object.assign(refToChangedInvoice, changedUser);
-            //var item = refToChangedInvoice[0];
-            //Object.assign(item, changedUser);
-            //this.changeStyleTemp(refToChangedUser, "changed", 3000);
-        } 
-        },       	
-      }*/
-    }
+          let index = this.invoice.findIndex(x => x.id === changedInvoice[0].id);
+            if (index !== null) {
+              this.changeStyleTemp(changedInvoice[0] ,index, changedInvoice[1], 3000);
+            }   
+        },  	
+        invoice_sent(sentInvoice){
+            let index = this.invoice.findIndex(x => x.id === sentInvoice[0].id);
+            this.invoice.splice(index , 1);     
+        },   
+    },
 }
 </script>

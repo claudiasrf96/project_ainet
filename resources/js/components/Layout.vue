@@ -52,7 +52,12 @@
     
     const fill_invoices = Vue.component('fill-invoices', require('./invoices/fillInvoice.vue'));
     const list_invoices = Vue.component('list-invoices', require('./invoices/listInvoices.vue'));
+
+
     const details_invoices = Vue.component('details-invoices', require('./invoices/invoiceDetails.vue')); 
+
+    
+    const details_manager_invoices = Vue.component('details-manager-invoices', require('./invoices/listInvoiceDetailedManager.vue')); 
     
     const manager_dasbord = Vue.component('manager-dasboard', require('./management/managerDashboard.vue'));
     const list_users = Vue.component('list-users', require('./management/listUsers.vue'));
@@ -123,6 +128,11 @@
           name: 'details-invoices'
         },
         {
+          path: '/details-manager-invoices',
+          component: details_manager_invoices,
+          name: 'details-manager-invoices'
+        },
+        {
           path: '/fill-invoices',
           component: fill_invoices,
           name: 'fill-invoices'
@@ -168,3 +178,22 @@
         router
     }
 </script>
+
+<style>
+
+@media screen and (min-width: 1000px) {
+    .insertCard{
+        position: fixed;
+        z-index: 100;
+        min-width: 550px;
+        border: 2px;
+        border-style: solid;
+        border-color: grey;
+        bottom:0;
+        right:0;
+    }
+    .layoutSpace{
+        margin: 0px !important;
+    }
+}
+</style><style>

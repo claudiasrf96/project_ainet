@@ -83,16 +83,3 @@
     }
   }
 </script>
-<style>
-
-@media screen and (min-width: 1000px) {
-    .insertCard{
-        position: fixed;
-        z-index: 100;
-        min-width: 550px;
-    }
-    .layoutSpace{
-        margin: 0px !important;
-    }
-}
-</style>
