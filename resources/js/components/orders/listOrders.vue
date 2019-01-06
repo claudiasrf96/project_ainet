@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="orders" :pagination.sync="pagination" :rows-per-page-items="pagination.rowsPerPageItems" >
+  <v-data-table :headers="headers" :items="orders" item-key="id" :pagination.sync="pagination" :total-items="totalOrders" :rows-per-page-items="pagination.rowsPerPageItems" >
     <template  slot="items" slot-scope="props" >
       <td class="text-xs-left">{{ props.item.id }}</td>
       <td :class="props.item.state == 'delivered' ? 'red' : 'blue'">{{ props.item.state }}</td>
@@ -27,13 +27,12 @@
       return {
         orders: [],
 				changeType: "",
-				tempStyleUser: null,
+        tempStyleUser: null,
+        totalOrders: 0,
         pagination: {
-          descending: true,
-          page: 1,
-          rowsPerPage: 7,
-          sortBy: 'created_at', // todo
-          rowsPerPageItems: [7, 15, 30]
+            page: 1,
+            rowsPerPage: 7,
+            rowsPerPageItems: [7, 15, 30]
         },
         headers: [
           {
@@ -64,7 +63,6 @@
     },
     mounted () {
       this.getUserInfor();
-      this.getOrders();
     },
     watch: { 
       new_order: function(newVal, oldVal){
@@ -72,27 +70,61 @@
       },
       listState: function(newVal, oldVal){
         this.getOrders(); 
+      },
+      pagination: {
+          handler () {
+              this.getOrders().then(data => {
+                  this.orders = data.items
+                  this.totalOrders = data.total
+              })
+          },
+          deep: true
       }
     },
     
     methods: {
         getOrders() {
-          if(this.listState == 'cook'){
-              axios.get('api/order/getPendingConfirmed/' + this.user.id).then(response=>{
-                this.orders = response.data.data;
-                console.log(this.orders);
-              });
-          }else if(this.listState == 'waiter'){
-              axios.get('api/order/getPreparedOrders/'+ this.user.id).then(response=>{
-                let data = response.data.data;
-                this.orders = data;
-              });
-          }else{
-            axios.get('api/order').then(response=>{
-                let data = response.data.data;
-                this.orders = data;
-              });
-          }
+          return new Promise((resolve, reject) => {
+            if(this.listState == 'cook'){
+                axios.get('api/order/confirmed/inPreparation/cook/' + this.user.id + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
+                    let items = response.data.data;
+                    let total = response.data.meta.total;
+                    resolve({
+                        items,
+                        total
+                    })
+                });
+            }else if(this.listState == 'waiterPendingConfirmed'){
+                axios.get('api/order/pending/confirmed/waiter/' + this.user.id + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
+                  let items = response.data.data;
+                  let total = response.data.meta.total;
+                  resolve({
+                      items,
+                      total
+                  })
+                });
+            }else if(this.listState == 'waiter'){
+                axios.get('api/order/getPreparedOrders/' + this.user.id + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
+                  let items = response.data.data;
+                  let total = response.data.meta.total;
+                  resolve({
+                      items,
+                      total
+                  })
+                });
+            } else{
+              axios.get('api/order' + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
+                  
+                  let items = response.data.data;
+                  let total = response.data.meta.total;
+              
+                  resolve({
+                      items,
+                      total
+                  })
+                });
+              }
+          });
         },
         markAsPrepared(e){
           console.log(e);

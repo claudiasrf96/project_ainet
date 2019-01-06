@@ -83,11 +83,17 @@ class UserControllerAPI extends Controller
     public function updatePass(Request $request, $id)
     {
         $request->validate([
-            'password' => 'min:3'
+            'password' => 'required|min:3|max:8'.$id,
         ]);
+
         $user = User::findOrFail($id);
-        $user->password = Hash::make($request->password); //not hashing
-        return new UserResource($user);
+        $user->password = Hash::make($request->password);
+        if (Hash::check($request->password, $hashedPassword)) //pasword certa
+        {   
+            $user->save();  
+            return new UserResource($user);
+        }
+
     }
 
     public function createUser (Request $request)

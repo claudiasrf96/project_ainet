@@ -25,8 +25,11 @@ import store from './stores/global-store';
 import VueSocketio from 'vue-socket.io';
 
 
- 
+import VeeValidate from 'vee-validate';
+
 import Toasted from 'vue-toasted';
+
+Vue.use(VeeValidate);
 
 Vue.use(new VueSocketio({
  debug: true,
@@ -38,6 +41,8 @@ Vue.use(Toasted, {
     duration: 5000,
     type: 'info',
 });
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -72,6 +77,9 @@ const app = new Vue({
         msgGlobalTextArea: "",
     },
     store,
+    $_veeValidate: {
+        validator: 'new'
+    },
     methods: {  
         sendGlobalMsg: function(){
             if (this.$store.state.user === null) {

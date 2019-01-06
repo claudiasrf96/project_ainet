@@ -49,17 +49,22 @@ Route::get('menu', 'ItemsControllerAPI@index');
 Route::put('menu/update/{id}', 'ItemsControllerAPI@update');
 
 
-
-
+Route::get('menu/drinks', 'ItemsControllerAPI@getDrink');
+Route::get('menu/dishs', 'ItemsControllerAPI@getDish');
 
 
 //Meal
-Route::get('meal', 'MealControllerAPI@getMeals');
+Route::get('meal', 'MealControllerAPI@getMeals');//middleware('auth:api', 'waiter')->
 
 Route::get('meal/getActiveMeal/{id}', 'MealControllerAPI@getActiveMeal');
 
 
+Route::get('meal/with/orders/with/users/active/Terminated', 'MealControllerAPI@getMealslWithOrderslWithUsersActiveTerminated');
+
 Route::get('meal/getActiveMealWithOpenOrder/{id}', 'MealControllerAPI@getActiveMealWithOpenOrder');
+
+Route::get('meal/MealslWithOrderslWithUsers', 'MealControllerAPI@getMealslWithOrderslWithUsers');
+
 
 
 Route::put('meal/update/{id}', 'MealControllerAPI@update');
@@ -71,6 +76,12 @@ Route::get('order', 'OrderControllerAPI@getOrders');
 //Orders Prepared   
 Route::get('order/getPreparedOrders/{id}', 'OrderControllerAPI@getPreparedOrder');
 
+
+Route::get('order/confirmed/inPreparation/cook/{id}', 'OrderControllerAPI@getConfirmedInPreprationCook'); //Us9
+
+Route::get('order/pending/confirmed/waiter/{id}', 'OrderControllerAPI@getPendingConfirmedWaiter'); //US14
+
+
 Route::get('order/getPendingConfirmed/{id}', 'OrderControllerAPI@getPendingConfirmed');
 
 Route::get('order/getOrderDetails/{id}/Meal/{Mealid}', 'OrderControllerAPI@getOrderDetails');
@@ -78,6 +89,8 @@ Route::get('order/getOrderDetails/{id}/Meal/{Mealid}', 'OrderControllerAPI@getOr
 Route::post('order/createOrder', 'OrderControllerAPI@createOrder');
 
 Route::put('order/updateState/{id}', 'OrderControllerAPI@updateState');
+
+Route::put('order/update/state/notDeliverd/{id}', 'OrderControllerAPI@updateStateToNotDelivers');
 
 Route::delete('order/delete/{id}', 'OrderControllerAPI@delete');
 

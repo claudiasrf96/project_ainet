@@ -104,28 +104,4 @@
     }
 }
 
-.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;    
-  text-align: center;
-}
-
-.btn {
-  border: 2px solid gray;
-  color: gray;
-  background-color: white;
-  padding: 20px 40px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.upload-btn-wrapper input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-}
 </style>

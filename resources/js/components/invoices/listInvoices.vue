@@ -6,12 +6,16 @@
         <td class="text-xs-left">{{ props.item.state }}</td>
         <td class="text-xs-left">{{ props.item.meals.users.name  }}</td>
         <td class="text-xs-left">{{ props.item.meals.total_price_preview }}</td>
-        <v-btn round color="primary" v-if="!props.expanded && emptyCheker(props.item) && updatedInvoice == 0"  style="float: left;" dark primary hide-details @click="props.expanded = !props.expanded"> Concluir  &emsp; <v-icon dark >edit</v-icon></v-btn>
-        <v-btn round color="amber" v-else-if="!props.expanded && pendingCheker && emptyCheker(props.item) == false"  style="float: left;" dark primary hide-details @click="props.item.state = 'paid'; sendInvoice(props.item)" > Paid  &emsp; <v-icon dark >send</v-icon></v-btn>
-        
-        <v-flex xs0 sm10 md10 v-else >
-          <v-progress-linear :indeterminate="true" ></v-progress-linear>
-        </v-flex>
+        <div v-if="dashboard != true">
+          <v-btn round color="primary" v-if="!props.expanded && emptyCheker(props.item) && updatedInvoice == 0"  style="float: left;" dark primary hide-details @click="props.expanded = !props.expanded"> Concluir  &emsp; <v-icon dark >edit</v-icon></v-btn>
+          <v-btn round color="amber" v-else-if="!props.expanded && pendingCheker && emptyCheker(props.item) == false"  style="float: left;" dark primary hide-details @click="props.item.state = 'paid'; sendInvoice(props.item)" > Paid  &emsp; <v-icon dark >send</v-icon></v-btn>
+          <v-flex xs0 sm10 md10 v-else >
+            <v-progress-linear :indeterminate="true" ></v-progress-linear>
+          </v-flex>
+        </div>
+        <div v-else>
+          <v-btn round color="primary" style="float: left;" dark primary hide-details @click="marckAsNotPaid(props.item)" > Not Paid  &emsp; <v-icon dark >edit</v-icon></v-btn>
+        </div>
       </template>
       <template slot="expand"  slot-scope="props" >
         <v-card flat >
@@ -38,6 +42,7 @@
 
 <script>
   export default {
+    props: ['dashboard'],
     data () {
       return{
         invoice: [],
@@ -46,8 +51,10 @@
         nome: [],
         valid: "",
         updatedInvoice: false,
-        pagination: {
-          rowsPerPageItems: [7, 15, 30]
+        pagination: { //added the first 2
+            page: 1,
+            rowsPerPage: 7,
+            rowsPerPageItems: [7, 15, 30]
         },
         headers: [
             {
@@ -59,7 +66,7 @@
             { text: 'Estado', value: 'state', sortable: false },
             { text: 'Empregado responsavel', value: 'responsible_waiter_id', sortable: false },
             { text: 'Preço total', value: 'total_price_preview', sortable: false },
-            { text: 'Ação', sortable: false },
+            {  sortable: false },
         ],
       }
     },
@@ -100,20 +107,50 @@
       },
       sendInvoice(invoiceAtual){
         
-        const index = this.invoice.indexOf(invoiceAtual);
-        axios.put('api/invoice/update/' + this.invoice[index].id, this.invoice[index]).then(response => {  
-          this.invoice.splice(index, 1);
-          let meal = response.data.data.meals;
-          meal.state = 'paid';
-          this.$socket.emit('invoice_sent', response.data.data, "Sent");     
+          const index = this.invoice.indexOf(invoiceAtual);
+          axios.put('api/invoice/update/' + this.invoice[index].id, this.invoice[index]).then(response => {  
+            this.invoice.splice(index, 1);
+            let meal = response.data.data.meals;
+            meal.state = 'paid';
+            this.$socket.emit('invoice_sent', response.data.data, "Sent");     
 
-          axios.put('api/meal/update/' + meal.id, meal).then(response => {  
+            axios.put('api/meal/update/' + meal.id, meal).then(response => {  
+            });
+          })
+          .catch(function(err) {
+            console.log(err);
+
           });
-        })
-        .catch(function(err) {
-          console.log(err);
+      },
+      marckAsNotPaid(invoiceAtual){
+          invoiceAtual.state = 'not paid';
 
-        });
+          //update invoice 
+          const index = this.invoice.indexOf(invoiceAtual);
+          axios.put('api/invoice/update/' + invoiceAtual.id, invoiceAtual).then(response => {  
+            this.invoice.splice(index, 1);
+            let meal = response.data.data.meals;
+
+            //update respective meal
+            meal.state = 'not paid';
+            axios.put('api/meal/update/' + meal.id, meal).then(response => {  
+                response.data.data.orders.forEach(function(entry) {
+
+                    // Update Meals
+                    entry.state = "not delivered";
+                    axios.put('api/order/update/state/notDeliverd/' + entry.id, entry).then(response => {  
+                        console.log("Order Not Delivered"); //Todo
+                    });
+                });
+            });
+
+            //Soket
+           
+          })
+          .catch(function(err) {
+            console.log(err);
+
+          });
       },
 
       //Check vall

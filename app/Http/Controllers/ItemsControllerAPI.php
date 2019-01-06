@@ -19,14 +19,6 @@ class ItemsControllerAPI extends Controller
        //return Item::all();
     }
 
-    public function getDish(){
-
-    }
-
-    public function getDrink(){
-
-    }
-
     /**
      * Show the form for creating a new resource.       
      *
@@ -83,6 +75,17 @@ class ItemsControllerAPI extends Controller
        $item->update($request->all());
 
        return new ItemsResource($item);
+    }
+
+    public function getDish()
+    {
+        return ItemsResource::collection(Item::where('items.type', 'dish')->paginate(10));
+    }
+
+
+    public function getDrink()
+    {
+        return ItemsResource::collection(Item::where('items.type', 'drink')->paginate(10));
     }
 
     /**

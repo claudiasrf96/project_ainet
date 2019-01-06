@@ -15,9 +15,9 @@
         <td class="text-xs-left">{{ props.item.username }}</td>
         <td class="text-xs-left">{{ props.item.email }}</td> 
         <td class="text-xs-left">
-            <v-btn round color="orange" :disabled="props.item.blocked == 1"  @click="blockUser(props.item); props.expanded = !props.expanded">  Block  &emsp; <v-icon dark>done</v-icon></v-btn>
-            <v-btn round color="green" :disabled="props.item.blocked == 0"  @click="unblockUser(props.item); props.expanded = !props.expanded">  Unblock  &emsp; <v-icon dark>done</v-icon></v-btn>
-            <v-btn round color="red"   @click="deleteUser(props.item); props.expanded = !props.expanded">  Delete  &emsp; <v-icon dark>done</v-icon></v-btn>
+            <v-btn round color="orange" :disabled="props.item.blocked == 1"  @click="blockUser(props.item); props.item.blocked = 1">  Block  &emsp; <v-icon dark>done</v-icon></v-btn>
+            <v-btn round color="green" :disabled="props.item.blocked == 0"  @click="unblockUser(props.item); props.item.blocked = 0">  Unblock  &emsp; <v-icon dark>done</v-icon></v-btn>
+            <v-btn round color="red"   @click="deleteUser(props.item); ">  Delete  &emsp; <v-icon dark>done</v-icon></v-btn>
         </td>        
       </template>
       <v-alert slot="no-results" :value="true" color="error" icon="warning">

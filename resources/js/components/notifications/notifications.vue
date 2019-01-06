@@ -12,20 +12,13 @@
         </v-flex>
         
         <v-flex xs3 class="boxLeft">
-          
-               <v-data-iterator :items="items"  content-tag="v-layout" row wrap>
-                 <v-flex slot="item" slot-scope="props" xs12 sm6 md4  lg3 >
-                  <v-card>
-                    <v-list dense>
-                      <v-list-tile>
-                            <v-chip  v-model="chip1"  close >{{  props.item.id }} </v-chip>
-                      </v-list-tile>
-                    </v-list>
-                  </v-card>
-                 </v-flex>
-              </v-data-iterator>
-
-
+            <v-btn-toggle >
+              <v-slide-y-transition group style="background-color: none">
+                  <div v-for="notification in notifications" v-bind:key = "notification.id">
+                    <v-chip  v-model="chip1"  close  @click="redirect()"> {{notification.info}} </v-chip>
+                  </div>
+            </v-slide-y-transition>
+          </v-btn-toggle>
         </v-flex>
       </v-layout>
     </v-container>   
@@ -41,6 +34,8 @@
         msgGlobalTextArea: "",
         chip1: true,
         items: [],
+        notifications: [],
+        
       }
     },
     mounted(){
@@ -65,14 +60,26 @@
                 console.log(this.items )
                 });
             },
+          redirect(){
+            console.log("a");
+          },
+          additem(id, notification){
+            
+            let newNotification = {};
+            newNotification.id = id;
+            newNotification.info = notification;
+
+            this.notifications.push(newNotification);
+          }
      },
       sockets:{   
         connect(){
             console.log('socket connected (socket ID = '+this.$socket.id+')');
         },
-        msg_from_server(dataFromServer){
-
-        }, 
+        order_changed(dataFromServer){
+            this.$toasted.show('Order ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
+            this.additem(dataFromServer[0].id, dataFromServer[1] );
+        },
       }
   }
 </script>
@@ -81,5 +88,8 @@
 .boxLeft{
   min-height: 700px;
   border-left: 1px solid black
+}
+.v-item-group {
+  flex-direction: column;
 }
 </style>

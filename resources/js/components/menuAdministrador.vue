@@ -45,14 +45,21 @@
                             <router-link :to="{ name: 'list-orders', params: { listState: 'cook' }}">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Pedidos (PH: COOK)</v-list>
+                                        <v-list class="text-lg-left">Lista de Pedidos (PH: COOK US9)</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
                             <router-link :to="{ name: 'list-orders', params: { listState: 'waiter' }}">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Pedidos (PH: WAITER)</v-list>
+                                        <v-list class="text-lg-left">Lista de Pedidos (PH: WAITER US17)</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link :to="{ name: 'list-orders', params: { listState: 'waiterPendingConfirmed' }}">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista de Pedidos das minhas Orders (PH: WAITER US14)</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -79,7 +86,14 @@
                             <router-link to="/create-meal">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Criar nova Refeição</v-list>
+                                        <v-list class="text-lg-left" >Criar nova Refeição</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                             <router-link to="/list-meals">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista de Refeições</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -111,13 +125,6 @@
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
-                            <router-link to="/details-manager-invoices" >
-                                <v-list-tile @click=""  >
-                                    <v-list-tile-content>
-                                        <v-list class="text-lg-left">Detalhes sobre Invoices (PH: Admin)</v-list> 
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </router-link>
                         </v-list-group>
                     </v-list>
                     <v-list class="pt-0" dense >
@@ -135,6 +142,13 @@
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
                                         <v-list class="text-lg-left">List users</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link to="/manager-info-dashboard">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Info Dasboard (PH: Admin) 30</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -176,7 +190,7 @@
                 </v-navigation-drawer>
             </v-flex>
             <v-flex xs10>
-                <router-view ></router-view>
+                <router-view  @updatedPhoto="updatedPhoto"></router-view>
             </v-flex>
         </v-layout>
     </v-container>
@@ -222,6 +236,9 @@
             },
             sendNotification(){
                 
+            },
+            updatedPhoto(photo){
+                this.user.photo_url = photo;
             }
       }
   }

@@ -19,14 +19,28 @@ class OrderControllerAPI extends Controller
        return new OrderResource($order);
     }
 
+    public function updateStateToNotDelivers(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+            if ($order->state != 'deliverd') {
+                $order->state = $request->input('state');
+            }
+        $order->update($request->all());
+        return new OrderResource($order);
+    }
+
+    
+
     public function createOrder(Request $request)
     {
         $order = new Order();
-        $order->fill($request->all());
+        $order->state = $request->input('state');
+        $order->item_id = $request->input('item_id');
+        $order->meal_id = $request->input('meal_id');
+        $order->responsible_cook_id = $request->input('responsible_cook_id');
         $order->start = Carbon::now();
         $order->save();
         
-        $order->update($request->all());
         return new OrderResource($order);
     }
     public function delete(Request $request, $id)
@@ -36,25 +50,51 @@ class OrderControllerAPI extends Controller
         return response()->json(null, 204);
     }
 
-    public function getOrders()
+    public function getOrders(Request $request)
     {
-        return OrderResource::collection(Order::paginate(7));   
+        return OrderResource::collection(Order::orderBy('start', 'desc')->paginate($request->get('page_size')));   
     }
 
-    public function getPreparedOrder($id)
+    public function getConfirmedInPreprationCook(Request $request, $id) //U9
     {
-        return OrderResource::collection(Order::where('state', 'prepared')
-                                                ->where('responsible_cook_id', $id)->get());  
+        return OrderResource::collection(Order::where('orders.state', 'confirmed')
+                                                ->orWhere(function($query) use ($id) {
+                                                    $query->where('orders.state', 'in preparation')
+                                                        ->where('orders.responsible_cook_id', $id);
+                                                })
+                                                ->orderByRaw("FIELD('in preparation' , 'confirmed')", 'desc')
+                                                
+                                                ->orderBy('start', 'desc')
+                                                ->paginate($request->get('page_size')));  
     }
-    public function getPendingConfirmed($id)
+
+    public function getPendingConfirmedWaiter(Request $request, $id) //U14
     {
-        return OrderResource::collection(Order::select('orders.id', 'orders.state', 'item_id', 'meal_id', 'responsible_cook_id', 'orders.start', 'orders.end')
-                                                ->from('orders')
+        return OrderResource::collection(Order::select('orders.*')
                                                 ->where('orders.state', 'pending')
+                                                ->orWhere('orders.state', 'confirmed')
+                                                ->where('responsible_waiter_id', $id)
+                                                ->join('meals', 'meal_id', '=' , 'meals.id')
+                                                ->where('meals.state', 'active')->paginate($request->get('page_size')));  
+    }
+    
+    public function getPreparedOrder(Request $request, $id) //U17
+    {
+        return OrderResource::collection(Order::select('orders.*')
+                                                ->where('orders.state', 'prepared')
+                                                ->join('meals', 'meal_id', '=' , 'meals.id')
+                                                ->where('responsible_waiter_id', $id)->paginate($request->get('page_size')));  
+    }
+   
+    public function getPendingConfirmed(Request $request, $id)
+    { //select('orders.id', 'orders.state', 'item_id', 'meal_id', 'responsible_cook_id', 'orders.start', 'orders.end')->from('orders')
+        return OrderResource::collection(Order::where('orders.state', 'pending')
                                                 ->orWhere('orders.state', 'confirmed')
                                                 ->where('responsible_cook_id', $id)
                                                 ->join('meals', 'meal_id', '=' , 'meals.id')
-                                                ->where('meals.state', 'active')->get());  
+                                                ->where('meals.state', 'active')->paginate($request->get('page_size')));  
+
+                                                
     }
     /*public function getOrderDetails( $UserID) 
     {

@@ -1,11 +1,11 @@
 <template>
-<v-data-table :headers="headers" :items="meals" item-key="id" :pagination.sync="pagination" :rows-per-page-items="pagination.rowsPerPageItems"  >
+<v-data-table :headers="headers" :items="meals" item-key="id" :pagination.sync="pagination"  :total-items="totalMeals" :rows-per-page-items="pagination.rowsPerPageItems"  >
   <template  slot="items" slot-scope="props" >
         <tr @click="props.expanded = !props.expanded">
             <td >{{ props.item ? props.item.state : "" }}</td>
             <td class="text-xs-left">{{ props.item ? props.item.table_number : ""}}</td>
             <td class="text-xs-left">{{ props.item ? props.item.start : ""}}</td>
-            <td class="text-xs-left">{{ props.item ? props.item.responsible_waiter_id: "" }}</td>
+            <td class="text-xs-left">{{ props.item ? props.item.user_table_name: "" }}</td>
             <td class="text-xs-left">{{ props.item ?  props.item.total_price_preview : ""}}</td>
             
             <td > <v-icon>expand_more</v-icon></td>
@@ -25,20 +25,16 @@
   </v-data-table>
 </template>
 
-
-
-
 <script>
   export default {
+    props: ['dashboard'],
     data () {
         return{
-            orders: [],
             meals: [],
+            totalMeals: 0,
             pagination: {
-                descending: true,
                 page: 1,
                 rowsPerPage: 7,
-                sortBy: 'created_at', // todo
                 rowsPerPageItems: [7, 15, 30]
             },
             headers: [
@@ -52,7 +48,7 @@
                 { text: 'Ordered Date', value: 'start' },
                 { text: 'Responsavel', value: 'responsible_waiter_id' },
                 { text: 'Preço', value: 'total_price_preview' },
-                { text: 'Ação', sortable: false },
+                { text: 'Dropdown', sortable: false },
             ],
             headers2: [
                 {
@@ -71,16 +67,43 @@
       this.getUserInfor();
       this.getMeals();
     },
+    watch: {
+        pagination: {
+            handler () {
+                this.getMeals().then(data => {
+                    this.meals = data.items
+                    this.totalMeals = data.total
+                })
+        },
+        deep: true
+        }
+    },
     methods: {
         getMeals(){
-            axios.get('/api/meal').then(response=>{
-                console.log(response.data.data);
-                this.meals = response.data.data;
-            });
-        },
-        getOrders() {
-            axios.get('/api/order/getOrderDetails/' + this.user.id).then(response=>{
-                console.log(response.data.data);
+            return new Promise((resolve, reject) => {
+                if(this.dashboard == true){
+                    axios.get('/api/meal/with/orders/with/users/active/Terminated?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage ).then(response=>{
+                        let items = response.data.data;
+                        let total = response.data.meta.total;
+                        resolve({
+                            items,
+                            total
+                        })
+                    }).catch(function (error) {
+                    console.log(error);
+                    });
+                }else{
+                    axios.get('/api/meal/MealslWithOrderslWithUsers?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
+                        let items = response.data.data;
+                        let total = response.data.meta.total;
+                        resolve({
+                            items,
+                            total
+                        })
+                    }).catch(function (error) {
+                    console.log(error);
+                    });
+                } 
             });
         },
         getUserInfor() {

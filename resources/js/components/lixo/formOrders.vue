@@ -2,19 +2,19 @@
   <form >
     <v-container grid-list-md>
         <v-layout wrap>
-            <v-flex xs10 sm5 md5>
-                <v-select :items="meals" v-model="selectMeal" solo label="Id da Refeição" required></v-select>
+            <v-flex xs12 sm6 md6>
+                <v-text-field v-model="selectMeal" disabled solo label="Id da Refeição" required></v-text-field>
             </v-flex>
-            <v-flex xs10 sm5 md5>
+            <v-flex xs12 sm6 md6>
             </v-flex>
-            <v-flex xs10 sm5 md5>
-                <v-select :items="dishes" v-model="selectDish" solo label="Prato"  required ></v-select>
+            <v-flex xs12 sm6 md6>
+                <v-text-field  v-model="selectDish" disabled solo label="Prato"  required ></v-text-field>
             </v-flex>
-            <v-flex xs10 sm5 md5>
-                <v-select :items="drinks" v-model="selectDrink" solo label="Bebida"  required ></v-select>
+            <v-flex xs12 sm6 md6>
+                <v-text-field v-model="selectDrink" disabled solo label="Bebida"  required ></v-text-field>
             </v-flex>
-            <v-flex xs10 sm10 md10>
-                <v-btn block  round color="primary" dark @click="createMeal">Criar Prato</v-btn>
+            <v-flex xs12 sm12 md12 class="text-xs-center">
+                <v-btn style="min-width: 500px" round color="primary" dark @click="createMeal">Criar Prato</v-btn>
             </v-flex>
         </v-layout>
     </v-container>
@@ -24,6 +24,7 @@
 
 <script>
   export default {
+    props: ['orderinfo'],
     data () { 
         return{
             user: [],
@@ -38,12 +39,19 @@
     },
      mounted () {
         this.getUserInfo();
-        this.getMenuItems();
-        this.getMeals();
-    }
-    ,
+       /* this.getMenuItems();
+        this.getMeals();*/
+    },
+
+    watch: { 
+        orderinfo: function(newVal, oldVal){
+            this.selectMeal = newVal.selected_meal;
+            this.selectDish = newVal.selected_drink;
+            this.selectDrink = newVal.selected_dish;
+        },
+    },
     methods: {
-        getMeals() {
+       /* getMeals() {
             console.log(this.user.id);
             axios.get('api/meal/getActiveMeal/' + this.user.id ).then(response=>{
                 let filterData = response.data.data
@@ -58,7 +66,7 @@
                 filterData = data.filter(a => a.type  == 'drink');
                 this.drinks = filterData.map(a => "Id: " + a.id + " (" + a.name + ")");
             }); 
-        },
+        },*/
         getUserInfo() {
             this.user = this.$store.state.user;
         },
