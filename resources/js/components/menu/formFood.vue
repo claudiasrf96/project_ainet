@@ -9,24 +9,27 @@
                                     <v-btn icon @click="show = !show"><v-icon>{{ show ? 'arrow_forward_ios' : 'arrow_back_ios' }}</v-icon></v-btn>
                                 </v-flex> 
                                 <v-flex xs10 sm10 md10>-->
+                                <v-btn absolute color="red" class="white--text" fab  right top @click="emitClose">
+                                    <v-icon>close</v-icon>
+                                </v-btn>
                                 <v-flex class="upload-btn-wrapper"  >
                                     <button class="btn">Atualizar Imagem</button>
                                     <input type="file" id="file" ref="file" name="myfile"  v-on:change="handleFileUpload()"/>
                                 </v-flex>
                                 <v-flex >
-                                    <v-text-field solo  v-model="selected_item.name" :counter="20" label="Nome" required></v-text-field>
+                                    <v-text-field solo  v-model="editingItem.name" :counter="20" label="Nome" required></v-text-field>
                                 </v-flex>
                                 <v-flex >
-                                    <v-text-field solo  v-model="selected_item.price" :counter="20" label="Preço" required ></v-text-field>
+                                    <v-text-field solo  v-model="editingItem.price" :counter="20" label="Preço" required ></v-text-field>
                                 </v-flex>
                                 <v-flex >
-                                     <v-textarea  v-model="selected_item.description" solo name="input-7-4" label="Descrição" ></v-textarea>
+                                     <v-textarea  v-model="editingItem.description" solo name="input-7-4" label="Descrição" ></v-textarea>
                                 </v-flex>
                                 <v-flex >
                                     <v-btn block  round color="primary" dark @click="submit">Atualizar Item</v-btn>
                                 </v-flex>
                                 <v-flex>
-                                    <v-btn  block  round color="primary" dark @click="clear">Clear</v-btn>
+                                    <v-btn  block  round color="primary" dark @click="clear">Reset</v-btn>
                                 </v-flex>
                             </v-container>
                         </form>
@@ -41,6 +44,7 @@
 <script>
   export default {
     props: ['editing_food', 'selected_item'],
+    file: "",
     data: () => ({
       
       show: false,
@@ -50,27 +54,61 @@
         'Waiter',
         'Cook',
         'Cashier'
-      ]
+      ],
+      editingItem: {}
     }),
     mounted() { 
+        
     },
     computed: {
     
     },
+    watch: { 
+      selected_item: function(newVal, oldVal){
+          this.editingItem = newVal;
+      },
+    },
     methods: {
       submit () {  
-        axios.put('menu/update/' + this.selected_item.id, this.selected_item)
+        if( this.file != undefined){
+            this.submitFile();
+        }
+        axios.put('api/menu/update/' + this.selected_item.id, this.editingItem)
             .then(response => {
-                this.$emit('updatedItem', response.data.data);
+               // this.$emit('updatedItem', response.data.data);
             })
             .catch(function (error) {
             });
       },
       clear () {
-        this.selected_item.name = ''
-        this.selected_item.price = ''
-        this.selected_item.description = ''
+            this.editingItem = this.selected_item;
       },
+        submitFile(){
+                let formData = new FormData();
+
+                // Add the form data we need to submit
+                formData.append('file', this.file);
+
+                axios.post('api/menu/update/pic/' + this.selected_item.id, formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+                ).then(response =>{
+                    this.$store.commit('setUser',response.data.data);
+                    this.$emit('updatedPhoto', response.data.data.photo_url);
+                })
+                .catch(function(){
+                    console.log('FAILURE!!');
+                });
+            },
+            handleFileUpload(){
+                this.file = this.$refs.file.files[0];
+        },
+      emitClose(){
+        this.$emit('closeEdit');
+      }
     }
   }
 </script>
@@ -92,28 +130,4 @@
     }
 }
 
-.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;    
-  text-align: center;
-}
-
-.btn {
-  border: 2px solid gray;
-  color: gray;
-  background-color: white;
-  padding: 20px 40px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.upload-btn-wrapper input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-}
 </style>

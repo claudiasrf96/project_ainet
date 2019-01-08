@@ -2,14 +2,14 @@
   <div>
     <v-data-table :headers="headers" :items="meals" :pagination.sync="pagination" :rows-per-page-items="pagination.rowsPerPageItems"  >
       <template slot="items" slot-scope="props">  
-        <td >{{ props.item ? props.item.state : "" }}</td>
+        <td :class="props.item.selected == '1' ? 'green' : '' ">{{ props.item ? props.item.state : "" }}</td>
         <td class="text-xs-left">{{ props.item ? props.item.table_number : ""}}</td>
         <td class="text-xs-left">{{ props.item ? props.item.start : ""}}</td>
         <td class="text-xs-left">{{ props.item ? props.item.user_table_name: "" }}</td>
         <td class="text-xs-left">{{ props.item ?  props.item.total_price_preview : ""}}</td>
         <td class="justify-left layout px-0">
-          <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-          <v-icon small @click="deleteItem(props.item)" >delete</v-icon>
+             <v-btn round color="blue" v-if="creating_meal == true" :disabled="notSelected" @click="adicionarItem(props.item); notSelected = !notSelected; props.item.selected = '1' ">  Aicionar &emsp; <v-icon dark>done</v-icon></v-btn>
+             <v-btn round color="blue" v-else :disabled="notSelected" @click="terminateMeal(props.item);">  Terminate &emsp; <v-icon dark>done</v-icon></v-btn>    
         </td>
       </template>
     </v-data-table>
@@ -18,10 +18,13 @@
 
 <script>
     export default {
-        props: ['new_meal'],
+        props: ['new_meal', 'creating_meal'],
         data () {
             return {
                 meals: [],
+                notSelected: false,
+                invoice: {},
+                invoiceDetails: {},
                 pagination: {
                     descending: true,
                     page: 1,
@@ -51,41 +54,104 @@
         watch: { //quand altera execut
             new_meal: function(newVal, oldVal){
                 this.meals.push(newVal);
-            }
+            },
+            creating_meal: function(newVal, oldVal){
+                console.log(newVal);
+            },
         },
 
         methods: {
             getMeals() {
-              /*  axios.get('api/meal/getActiveMealWithOpenOrder/' + this.user.id).then(response=>{
-                    
-                    this.meals = response.data.data;
-                    console.log(this.meals); 
-                }); 
-              */  axios.get('api/meal').then(response=>{
-                    
-                    this.meals = response.data.data;
-                    console.log(this.meals); 
-                });
+                
+                if(this.creating_meal == true){
+                    //getActiveMealWithOpenOrder
+                    axios.get('api/meal/getActiveMeal/' + this.user.id).then(response=>{
+                        
+                        this.meals = response.data.data;
+                        console.log(this.meals); 
+                    }); 
+                }else{
+
+                    axios.get('api/meal').then(response=>{
+                        
+                        this.meals = response.data.data;
+                        console.log(this.meals); 
+                    });
+                }
             },
             close () {
                 this.dialog = false
                 setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
                 }, 300)
             },
 
             save () {
                 if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem)
+                    Object.assign(this.desserts[this.editedIndex], this.editedItem)
                 } else {
-                this.desserts.push(this.editedItem)
+                    this.desserts.push(this.editedItem)
                 }
                 this.close()
+            },
+            terminateMeal(item){
+                let index = this.meals.indexOf(item);
+                item.state = 'terminated';
+                axios.put('api/meal/update/' + item.id, item).then(response=>{  
+                    this.meals.splice(index , 1);
+                    response.data.data.orders.forEach(function(entry) {
+                        entry.state = "not delivered";
+                        axios.put('api/order/updateState/' + entry.id, entry).then(response => {  
+                            console.log("Order Not Delivered"); //Todo 
+                            this.$socket.emit('order_state_waiter', 'Not Delivered', 'list-orders', e); //Added Todo
+                        });
+                    });
+                }); 
+                this.createInvoice(item)
+            },
+            createInvoice(item){
+                this.invoice.state = 'pending';
+                this.invoice.meal_id = item.id;
+                this.invoice.total_price = item.total_price_preview;
+
+                axios.post('api/invoice/create', this.invoice).then(response=>{ 
+                    this.createInvoiceItem(item);
+                })
+            },
+            createInvoiceItem(item){
+                let array = item.orders;
+                this.invoiceDetails.quantity = 0;
+                this.invoiceDetails.sub_total_price = 0;
+                
+                axios.post('api/invoiceItem/create/' + item.id, item).then(response=>{ 
+                        console.log(response.data.data);
+                    })
+                    
             },
             getUserInfor() {
                 this.user = this.$store.state.user;
             },
-        }
-    }
+
+            changeStyleTemp: function(orderAlterada, type, time_ms){
+                this.meals.push(orderAlterada);
+                setTimeout( () => {
+                this.changeType = "";
+                this.tempStyleOrder = null;
+                }, time_ms)
+            },
+            adicionarItem(item){
+                this.$emit('selected_meal', item);
+            },
+      },
+      sockets: {
+        order_state_waiter(dataFromServer){
+            this.getOrders();
+        }, 
+        meal_state_manager(dataFromServer){
+            this.getOrders();
+        },  
+
+      },
+}
 </script>

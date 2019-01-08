@@ -1,7 +1,7 @@
 <template> 
     <v-container grid-list-md text-xs-center fluid>
       <v-layout>
-            <v-flex fill-height xs2>
+            <v-flex fill-height xs12 sm2 md2>
                 <v-navigation-drawer stateless value="true"  >
                     <router-link to="/profile-user"  style="text-decoration : none">
                         <v-toolbar flat class="transparent" >
@@ -17,11 +17,9 @@
                                 </v-list>
                         </v-toolbar>
                     </router-link>
-                    <router-link to="/notification-user">
-                        <v-btn flat  block>
-                            <v-icon v-if="true" color="grey" class="v-list__tile__action">notifications</v-icon>
-                            <v-icon color="rgba(242, 38, 19, 1)" v-else>notifications_active</v-icon>
-                            <v-list-tile-title class="v-list__tile__content" >Notificações</v-list-tile-title>
+                    <router-link to="/send-notification">
+                        <v-btn flat block>
+                            <v-icon >message</v-icon>
                         </v-btn>
                     </router-link>
                     <v-list class="pt-0" dense >
@@ -32,34 +30,41 @@
                                 </v-list-tile-action>
 
                                 <v-list-tile-content>
-                                    <v-list-tile-title>Pedido</v-list-tile-title>
+                                    <v-list-tile-title>Order</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
                             <router-link  to='/create-orders'>
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Criar novo Pedido</v-list>
+                                        <v-list class="text-lg-left">Criar novo Order</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
-                            <router-link :to="{ name: 'list-orders', params: { listState: 'cook' }}">
+                            <router-link v-if="getUserType() == 'cook'" :to="{ name: 'list-orders', params: { listState: 'cook' }}">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Pedidos (PH: COOK)</v-list>
+                                        <v-list  class="text-lg-left" >Lista de Orders </v-list> <!-- (PH: COOK US9) -->
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
-                            <router-link :to="{ name: 'list-orders', params: { listState: 'waiter' }}">
+                            <router-link  v-if="getUserType() == 'waiter'" :to="{ name: 'list-orders', params: { listState: 'waiter' }}">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Pedidos (PH: WAITER)</v-list>
+                                        <v-list class="text-lg-left">Lista de Orders </v-list> <!-- (PH: WAITER US17)  14 / 17-->
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
-                            <router-link to="/order-details">
+                            <router-link  v-if="getUserType() == 'waiter'" :to="{ name: 'list-orders', params: { listState: 'waiterPendingConfirmed' }}">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Orders (PH: WAITER)</v-list>
+                                        <v-list class="text-lg-left">Lista das minhas Orders </v-list>  <!-- (PH: WAITER US14)  “pending” or “confirmed”/prepared” --> 
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link  v-if="getUserType() == 'waiter'" to="/order-details">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista Detalhada de Orders </v-list>  <!-- (PH: WAITER US14)-->
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -73,20 +78,27 @@
                                 </v-list-tile-action>
 
                                 <v-list-tile-content>
-                                    <v-list-tile-title>Refeição</v-list-tile-title>
+                                    <v-list-tile-title>Meals</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-                            <router-link to="/create-meal">
+                            <router-link v-if="getUserType() == 'waiter'" to="/create-meal">
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Criar nova Refeição</v-list>
+                                        <v-list class="text-lg-left" >Criar nova Meals</v-list> <!-- (PH: WAITER US12) -->
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                             <router-link  v-if="getUserType() == 'waiter'" to="/list-meals">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista de Meals</v-list> <!-- (PH: WAITER US21) -->
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
                         </v-list-group>
                     </v-list>
                     </v-list>
-                    <v-list class="pt-0" dense >
+                    <v-list v-if="getUserType() == 'cashier' || getUserType() == 'manager'" class="pt-0" dense >
                         <v-list-group no-action>
                             <v-list-tile slot="activator"> 
                                 <v-list-tile-action>
@@ -97,23 +109,44 @@
                                     <v-list-tile-title>Invoices</v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-                            <router-link to="/fill-invoices" >
+                            <router-link  v-if="getUserType() == 'cashier'" :to="{ name: 'fill-invoices', params: { typeInvoice: 'filingInvoice' }}" >
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Lista de Invoices</v-list>
+                                        <v-list class="text-lg-left">Lista de Invoice</v-list> 
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
-                            <router-link to="/details-invoices" >
+                            <router-link  v-if="getUserType() == 'manager'" to="/list-meals" >
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
-                                        <v-list class="text-lg-left">Detalhes sobre Invoices</v-list>
+                                        <v-list class="text-lg-left">List All Invoice</v-list> 
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link  v-if="getUserType() == 'cashier' || getUserType() == 'cashier'" :to="{ name: 'fill-invoices', params: { typeInvoice: 'downloadInvoice' }}" >
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Lista Paid Invoices To Download</v-list> 
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link v-if="getUserType() == 'cashier'" to="/details-invoices" >
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Detalhes sobre Invoices</v-list> 
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link v-if="getUserType() == 'manager'" to="/list-invoices-details-manager" >
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Detalhes sobre Invoices Manager</v-list> 
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
                         </v-list-group>
                     </v-list>
-                    <v-list class="pt-0" dense >
+                    <v-list v-if="getUserType() == 'manager'" class="pt-0" dense >
                         <v-list-group no-action>
                             <v-list-tile slot="activator"> 
                                 <v-list-tile-action>
@@ -128,6 +161,13 @@
                                 <v-list-tile @click=""  >
                                     <v-list-tile-content>
                                         <v-list class="text-lg-left">List users</v-list>
+                                    </v-list-tile-content>
+                                </v-list-tile>
+                            </router-link>
+                            <router-link to="/manager-info-dashboard">
+                                <v-list-tile @click=""  >
+                                    <v-list-tile-content>
+                                        <v-list class="text-lg-left">Info Dasboard (PH: Admin) 30</v-list>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </router-link>
@@ -162,14 +202,11 @@
                     </v-list>
                     <v-btn v-if="user.shift_active == 0" flat block @click="checkShift">Enter Shift</v-btn>
                     <v-btn v-else flat block @click="checkShift">Leave Shift</v-btn>
-                        
-                    <v-btn flat block @click="sendNotification">
-                            <v-icon >message</v-icon>
-                    </v-btn>
                 </v-navigation-drawer>
+                <notification-user></notification-user>
             </v-flex>
-            <v-flex xs10>
-                <router-view ></router-view>
+            <v-flex xs12 sm10 md10>
+                <router-view  @updatedPhoto="updatedPhoto"></router-view>
             </v-flex>
         </v-layout>
     </v-container>
@@ -194,6 +231,9 @@
             getUserInfor() {
                 this.user = this.$store.state.user;
             },
+            getUserType(){
+                return this.user.type;
+            },
             checkShift() {
                 this.user.shift_active = this.user.shift_active == 1 ? 0 : 1;
                 if(this.user.shift_active == 0){
@@ -213,9 +253,18 @@
                 let d =  new Date();
                 return d.getFullYear() + "-" + (d.getMonth() + 1)  + "-" + (d.getDay() +2) + " " +d.getHours() + ":" +d.getMinutes() + ":" +d.getSeconds();
             },
-            sendNotification(){
-
+            updatedPhoto(photo){
+                this.user.photo_url = photo;
             }
-      }
+        },
+        sockets:{   
+            connect(){
+                console.log("ola");
+                if(this.$store.state.user !== null){
+
+                    this.$socket.emit('user_enter', this.$store.state.user);
+                }
+            },
+        }
   }
 </script>

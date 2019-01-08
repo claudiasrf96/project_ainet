@@ -37,7 +37,7 @@ class MealControllerAPI extends Controller
         $meal->state = "active";
         $meal->responsible_waiter_id = $request->input('responsible_waiter_id');
         $meal->table_number = $request->input('table_number');
-        $meal->start = Carbon::now();
+        $meal->start = Carbon::now()->toDateTimeString();
 
         $meal->save();
         
@@ -55,15 +55,35 @@ class MealControllerAPI extends Controller
 
     public function getMeals()
     {
-       // return MealResource::collection(Meal::where('state', 'active')->get()); 
+        return MealResource::collection(Meal::where('state', 'active')->with('orders.items')->get()); 
        // return MealResource::collection(Meal::all()); //paginate(7));   
-       return MealResource::collection(Meal::with('orders.items')->with('orders.users')->get()); 
     }
+
+    public function getMealslWithOrderslWithUsers(Request $request)
+    {
+       return MealResource::collection(Meal::with('orders.items')->with('orders.users')
+                                        ->paginate($request->get('page_size'))); 
+    }
+
+    public function getMealslWithOrderslWithUsersActiveTerminated(Request $request)
+    {
+       return MealResource::collection(Meal::with('orders.items')->with('orders.users')
+                                            ->where('meals.state', 'active')
+                                            ->orWhere('meals.state', 'terminated')
+                                            ->paginate($request->get('page_size'))); 
+    }
+
+    public function getFilterMeals()
+    {
+       return MealResource::collection(Meal::where('meals.state', $request->get('state')->with('orders.users')->paginate($request->get('page_size')))); 
+    }
+
     public function getActiveMealWithOpenOrder(Request $request , $id)
     {
         return MealResource::collection(Meal::where('meals.state', 'active')
                                             ->where('responsible_waiter_id', $id)
-                                            ->where('orders.state','!=', 'delivered')->get()); 
+                                            ->join('orders', 'meals.id', '=' , 'orders.meal_id')
+                                            ->where('orders.state', '!=', 'delivered')->get()); 
                                             /*:select('meals.id', 'meals.state', 'table_number', 'meal_id', 'responsible_waiter_id', 'meals.start', 'meals.end')
                                             ->from('meals')
                                             ->where('state', 'active')

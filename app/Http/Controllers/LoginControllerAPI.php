@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Resources\UserResource;
+use App\User;
+
 //Added
 define('YOUR_SERVER_URL', 'http://restauranteprog.dad');
 // Check "oauth_clients" table for next 2 values:
@@ -14,6 +17,17 @@ class LoginControllerAPI extends Controller
 { 
     public function login(Request $request)
     {
+        
+        $user = User::where('username', $request->get('email'))
+                    ->orWhere('email', $request->get('email'))->first();
+
+        if($user->blocked == 1){
+            return response()->json(['msg'=> 'Bloked'], 200);
+        }
+        if($user->email_verified_at  == null){
+            return response()->json(['msg'=>'Email Not verified'], 200);
+        }
+
     //Added
         $http = new \GuzzleHttp\Client;
         $response = $http->post(YOUR_SERVER_URL.'/oauth/token', [

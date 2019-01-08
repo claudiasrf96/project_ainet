@@ -19,7 +19,7 @@ class InvoiceResource extends JsonResource
             'state' => $this->state,
             'meal_id' => $this->meal_id,
             'nif' => $this->nif,
-            'name' => $this->name,
+            'name' => $this->name, 
             'date' => $this->date,
             'total_price' => $this->total_price,
             'meals' => $this->meals,

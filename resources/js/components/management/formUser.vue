@@ -19,6 +19,9 @@
                                     <v-text-field solo  v-model="user.email" :counter="20" label="Email   " required ></v-text-field>
                                 </v-flex>
                                 <v-flex >
+                                    <v-text-field solo  v-model="user.password" :counter="20" label="Password   " required ></v-text-field>
+                                </v-flex>
+                                <v-flex >
                                     <v-select solo  v-model="select" :items="items"  label="Item" required ></v-select>
                                 </v-flex>
                                 <v-flex >
@@ -67,7 +70,7 @@
           this.select = this.select.toLowerCase();
           this.user.type = this.select;
           console.log(this.user);
-          axios.post('/api/users/createUser', this.user)
+          axios.post('api/users/createUser', this.user)
                 .then(function (response) {
                 })
                 .catch(function (error) {
@@ -79,20 +82,8 @@
         this.user.username = ''
         this.user.email = ''
         this.select = null
+        this.user.password = "";
       },
     }
   }
 </script>
-<style>
-
-@media screen and (min-width: 1000px) {
-    .insertCard{
-        position: fixed;
-        z-index: 100;
-        min-width: 550px;
-    }
-    .layoutSpace{
-        margin: 0px !important;
-    }
-}
-</style>

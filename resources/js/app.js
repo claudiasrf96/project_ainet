@@ -21,23 +21,29 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify)
 
 import store from './stores/global-store';
-/*
+
 import VueSocketio from 'vue-socket.io';
 
 
- 
+import VeeValidate from 'vee-validate';
+
 import Toasted from 'vue-toasted';
+
+Vue.use(VeeValidate);
 
 Vue.use(new VueSocketio({
  debug: true,
  connection: 'http://127.0.0.1:8080'
 })); 
 
+
 Vue.use(Toasted, {
-position: 'bottom-center',
-duration: 5000,
-type: 'info',
-});*/
+    position: 'bottom-center',
+    duration: 5000,
+    type: 'info',
+});
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -66,33 +72,24 @@ Vue.component('layout-vue', require('./components/Layout.vue'));
  */
 
 const app = new Vue({
-    el: '#app', 
+    el: '#app',
     data:{
-        msgGlobalText: "",
-        msgGlobalTextArea: "",
     },
     store,
+    $_veeValidate: {
+        validator: 'new'
+    },
+    mounted() {
+        this.$store.commit('loadTokenAndUserFromSession');
+    },
     methods: {  
-        sendGlobalMsg: function(){
-            if (this.$store.state.user === null) {
-                this.$socket.emit('msg_from_client', this.msgGlobalText);
-            } else {
-                this.$socket.emit('msg_from_client', this.msgGlobalText,
-                this.$store.state.user);
-            }
-            this.msgGlobalText = "";
-        },
+        
     },
     sockets:{   
         connect(){
-            console.log('socket connected (socket ID = '+this.$socket.id+')');
+            if(this.$store.state.user !== null){
+                this.$socket.emit('user_enter', this.$store.state.user);
+            }
         },
-        msg_from_server(dataFromServer){
-            this.msgGlobalTextArea = dataFromServer + '\n' +
-            this.msgGlobalTextArea ;
-            
-           // let sourceName = dataFromServer;
-            this.$toasted.show('Message "' +dataFromServer); //doing it
-        }, 
-    }
+    }       
 });

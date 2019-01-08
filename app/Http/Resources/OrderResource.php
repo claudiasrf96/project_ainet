@@ -27,7 +27,7 @@ class OrderResource extends JsonResource
             'meal_id' => $this->meal_id,
             'meal_table_id' => $this->meal->id,
             'meal_table_state' => $this->meal->state,
-            "responsible_cook_name" => $this->users->name
+            "responsible_cook_name" => $this->users != null ? $this->users->name : ""
         ];
     }
 }

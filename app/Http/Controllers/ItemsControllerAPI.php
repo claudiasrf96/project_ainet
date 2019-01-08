@@ -19,14 +19,6 @@ class ItemsControllerAPI extends Controller
        //return Item::all();
     }
 
-    public function getDish(){
-
-    }
-
-    public function getDrink(){
-
-    }
-
     /**
      * Show the form for creating a new resource.       
      *
@@ -79,7 +71,34 @@ class ItemsControllerAPI extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $item = Item::findOrFail($id);
+       $item->update($request->all());
+
+       return new ItemsResource($item);
+    }
+    public function updatePic(Request $request, $id)
+    {
+       $item = Item::findOrFail($id);
+       $item->update($request->all());
+       
+       $filename = basename($request->file('file')->store('public/items'));
+       $item->photo_url = $filename;
+       $item->update($request->all());
+
+       return new ItemsResource($item);
+    }
+
+    
+
+    public function getDish()
+    {
+        return ItemsResource::collection(Item::where('items.type', 'dish')->paginate(10));
+    }
+
+
+    public function getDrink()
+    {
+        return ItemsResource::collection(Item::where('items.type', 'drink')->paginate(10));
     }
 
     /**
