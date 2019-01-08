@@ -37,7 +37,7 @@ class MealControllerAPI extends Controller
         $meal->state = "active";
         $meal->responsible_waiter_id = $request->input('responsible_waiter_id');
         $meal->table_number = $request->input('table_number');
-        $meal->start = Carbon::now();
+        $meal->start = Carbon::now()->toDateTimeString();
 
         $meal->save();
         
@@ -55,7 +55,7 @@ class MealControllerAPI extends Controller
 
     public function getMeals()
     {
-        return MealResource::collection(Meal::where('state', 'active')->get()); 
+        return MealResource::collection(Meal::where('state', 'active')->with('orders.items')->get()); 
        // return MealResource::collection(Meal::all()); //paginate(7));   
     }
 

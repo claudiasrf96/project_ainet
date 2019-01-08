@@ -48,6 +48,7 @@
                         this.message = "User authenticated correctly";
                         this.showMessage = true;
                         this.alertType = "#4caf50";
+                        this.$socket.emit('user_enter', response.data.data);
                         this.$router.push({ name: 'profile' })
                     })
                     .catch(error => {

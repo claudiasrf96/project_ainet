@@ -36,6 +36,7 @@ Vue.use(new VueSocketio({
  connection: 'http://127.0.0.1:8080'
 })); 
 
+
 Vue.use(Toasted, {
     position: 'bottom-center',
     duration: 5000,
@@ -71,54 +72,24 @@ Vue.component('layout-vue', require('./components/Layout.vue'));
  */
 
 const app = new Vue({
-    el: '#app', 
+    el: '#app',
     data:{
-        msgGlobalText: "",
-        msgGlobalTextArea: "",
     },
     store,
     $_veeValidate: {
         validator: 'new'
     },
+    mounted() {
+        this.$store.commit('loadTokenAndUserFromSession');
+    },
     methods: {  
-        sendGlobalMsg: function(){
-            if (this.$store.state.user === null) {
-                this.$socket.emit('msg_from_client', this.msgGlobalText);
-            } else {
-                this.$socket.emit('msg_from_client', this.msgGlobalText,
-                this.$store.state.user);
-            }
-            this.msgGlobalText = "";
-        },
-        sendDepMsg: function(){
-            console.log('Sending to the server (only same department) this message: "' + this.msgDepText + '"');
-            if (this.$store.state.user === null) {
-                this.$toasted.error('User is not logged in. Department is unknown!');            
-            } else {
-                this.$socket.emit('msg_to_manager', this.msgDepText, this.$store.state.user);
-            }
-            this.msgDepText = "";
-        }
+        
     },
     sockets:{   
         connect(){
-            console.log('socket connected (socket ID = '+this.$socket.id+')');
-        },
-        msg_from_server(dataFromServer){
-            this.msgGlobalTextArea = dataFromServer + '\n' +
-            this.msgGlobalTextArea ;
-            
-           // let sourceName = dataFromServer;
-            this.$toasted.show('Message "' +dataFromServer); //doing it
-        }, 
-        order_changed(dataFromServer){
-            this.$toasted.show('Order ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
-        },
-        order_deleted(dataFromServer){
-            this.$toasted.show('Order ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
-        },
-        meal_created(dataFromServer){
-            this.$toasted.show('Meal ' + dataFromServer[0].id + ' has been ' + dataFromServer[1]);
+            if(this.$store.state.user !== null){
+                this.$socket.emit('user_enter', this.$store.state.user);
+            }
         },
     }       
 });

@@ -9,7 +9,6 @@
                     <v-btn flat to="/menu-user" >Menu</v-btn>
                     <v-btn v-show="!this.$store.state.user" flat to="/login-user" >Login</v-btn>
                     <v-btn v-show="this.$store.state.user" flat to="/profile-user">Profile</v-btn>
-                    <v-btn v-show="this.$store.state.user" flat to="/create-user">Sign In</v-btn>
                     <v-btn v-show="this.$store.state.user" flat to="/logout-user">Logout</v-btn>
             </v-toolbar-items>
         </v-toolbar>
@@ -57,7 +56,10 @@
     const list_invoices = Vue.component('list-invoices', require('./invoices/listInvoices.vue'));
 
 
+
     const details_invoices = Vue.component('details-invoices', require('./invoices/invoiceDetails.vue')); 
+    const list_invoices_details_manager = Vue.component('list-invoices-details-manager', require('./invoices/invoiceDetailsManager.vue')); 
+
 
     
     //const details_manager_invoices = Vue.component('details-manager-invoices', require('./invoices/listInvoiceDetailedManager.vue')); 
@@ -76,6 +78,8 @@
     const form_food = Vue.component('form-food', require('./menu/formFood.vue'));
     
     const notification = Vue.component('notification-user', require('./notifications/notifications.vue')); 
+    
+    const send_notification = Vue.component('send-notification-user', require('./notifications/sendNotifications.vue')); 
 
 
     const routes = [
@@ -120,8 +124,7 @@
         {
           path: '/list-food',
           component: list_food,
-          name: 'list-food',
-          props: true
+          name: 'list-food'
         },
          {
           path: '/list-meals',
@@ -141,7 +144,12 @@
          {
           path: '/list-invoices',
           component: list_invoices,
-          name: 'list-invoices'
+          name: 'list-invoices',
+        },
+         {
+          path: '/list-invoices-details-manager',
+          component: list_invoices_details_manager,
+          name: 'list-invoices-details-manager',
         },
         {
           path: '/list-tables',
@@ -159,9 +167,10 @@
           name: 'details-manager-invoices'
         },*/
         {
-          path: '/fill-invoices',
+          path: '/fill-invoices/:typeInvoice',
           component: fill_invoices,
-          name: 'fill-invoices'
+          name: 'fill-invoices',
+          props: true
         },
         {
           path: '/manager-dasbord',
@@ -188,6 +197,13 @@
           component: manager_info_dashboard,
           name: 'manager-info-dashboard'
         },
+        
+        {
+          path: '/send-notification',
+          component: send_notification,
+          name: 'send-notification'
+        },
+        
         ]
         },
     ];

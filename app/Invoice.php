@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
     protected $fillable = [
-        'state', 'nif', 'name', 'total_price'
+        'state', 'nif', 'name', 'total_price', 'created_at', 'updated_at' 
     ];
     
     public function meals(){

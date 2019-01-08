@@ -76,6 +76,19 @@ class ItemsControllerAPI extends Controller
 
        return new ItemsResource($item);
     }
+    public function updatePic(Request $request, $id)
+    {
+       $item = Item::findOrFail($id);
+       $item->update($request->all());
+       
+       $filename = basename($request->file('file')->store('public/items'));
+       $item->photo_url = $filename;
+       $item->update($request->all());
+
+       return new ItemsResource($item);
+    }
+
+    
 
     public function getDish()
     {

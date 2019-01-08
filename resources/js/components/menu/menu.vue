@@ -25,7 +25,7 @@
                                         <h3 class="text-xs-right"> {{ menu.price }}  <v-icon>euro_symbol</v-icon></h3>
                                     </v-flex>
                                 </v-container>
-                                <v-flex xs12 class="text-xs-right">
+                                <v-flex xs12 class="text-xs-right"  >
                                     <v-btn round color="green" :disabled="editing_food" style="margin-top: 20px;"  @click="editingFood(); selected_item = menu" >  Editar &emsp; <v-icon dark>edit</v-icon></v-btn>
                                 </v-flex>
                         </v-card-title>

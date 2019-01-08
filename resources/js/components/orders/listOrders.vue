@@ -29,6 +29,7 @@
 				changeType: "",
         tempStyleUser: null,
         totalOrders: 0,
+        type: "",
         pagination: {
             page: 1,
             rowsPerPage: 7,
@@ -62,13 +63,15 @@
       }
     },
     mounted () {
+      this.type = this.listState;
       this.getUserInfor();
     },
     watch: { 
       new_order: function(newVal, oldVal){
-          this.orders.push(newVal);
+          this.orders.push();
       },
       listState: function(newVal, oldVal){
+        this.type = newVal;
         this.getOrders(); 
       },
       pagination: {
@@ -85,7 +88,7 @@
     methods: {
         getOrders() {
           return new Promise((resolve, reject) => {
-            if(this.listState == 'cook'){
+            if(this.type == 'cook'){
                 axios.get('api/order/confirmed/inPreparation/cook/' + this.user.id + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
                     let items = response.data.data;
                     let total = response.data.meta.total;
@@ -94,7 +97,7 @@
                         total
                     })
                 });
-            }else if(this.listState == 'waiterPendingConfirmed'){
+            }else if(this.type == 'waiterPendingConfirmed'){
                 axios.get('api/order/pending/confirmed/waiter/' + this.user.id + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
                   let items = response.data.data;
                   let total = response.data.meta.total;
@@ -103,7 +106,7 @@
                       total
                   })
                 });
-            }else if(this.listState == 'waiter'){
+            }else if(this.type == 'waiter'){
                 axios.get('api/order/getPreparedOrders/' + this.user.id + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
                   let items = response.data.data;
                   let total = response.data.meta.total;
@@ -114,7 +117,6 @@
                 });
             } else{
               axios.get('api/order' + '?page=' + (this.pagination.page ) + '&page_size=' + this.pagination.rowsPerPage).then(response=>{
-                  
                   let items = response.data.data;
                   let total = response.data.meta.total;
               
@@ -130,26 +132,28 @@
           console.log(e);
               e.state = 'prepared';
                 axios.put('api/order/updateState/'+ e.id, e).then(response => {  
-                  this.$socket.emit('order_changed', e, "Prepared");
+                  this.$socket.emit('order_cook', 'Prepared', 'list-orders', e);
+                  this.$socket.emit('order_state_waiter', 'Prepared', 'list-orders',e);
               })
         },
         markAsInPreparation(e){
             e.state = 'in preparation';
               axios.put('api/order/updateState/' + e.id, e).then(response => { 
-                this.$socket.emit('order_changed', e, "Being Prepared");
+                  this.$socket.emit('order_cook', 'In preparation', 'list-orders',  e);
+                  this.$socket.emit('order_state_waiter', 'In preparation', 'list-orders',e);
             })
         },
         deletOrder(e){
             const index = this.orders.indexOf(e);
             this.orders.splice(index, 1);
             axios.delete('api/order/delete/' + e.id).then(response=> {
-                this.$socket.emit('order_deleted', e, "Deleted");
             });
         },
         markAsDeliverd(e){
             e.state = 'delivered';
             axios.put('api/order/updateState/' + e.id, e).then(response => {
-              this.$socket.emit('order_changed', e, "Delivered");
+                  this.$socket.emit('order_cook', 'Delivered', 'list-orders',  e);
+                  this.$socket.emit('order_state_waiter', 'Delivered', 'list-orders', e);
             }),
             setTimeout(() =>
                 this.orders.splice(this.orders.indexOf(e), 1)
@@ -175,16 +179,16 @@
           },
       },
       sockets: {
-        order_changed(changedOrder){
-          let index = this.orders.findIndex(x => x.id === changedOrder[0].id);
-          if (index !== null) {
-            this.changeStyleTemp(changedOrder[0] ,index, changedOrder[1], 3000);
-          }          
-        },     
-        order_deleted(deletedOrder){
+        order_cook(dataFromServer){
+            this.getOrders();
+        },
+        order_state_waiter(dataFromServer){
+            this.getOrders();
+        },       
+        /*order_deleted(deletedOrder){
           let index = this.orders.findIndex(x => x.id === deletedOrder[0].id);
           this.orders.splice(index , 1);     
-        },        	
+        }, */       	
       },
 }
 </script>

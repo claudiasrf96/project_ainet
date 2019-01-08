@@ -12,7 +12,7 @@
           <v-toolbar-title>Invoices</v-toolbar-title>
         </v-toolbar>
     </v-card>
-    <list-invoices :dashboard="true" ></list-invoices>
+    <list-invoices :dashboard="true"  :alterInvoice="notPaidI" @notPaidMeal="notPaid" ></list-invoices>
     <br>
     <br>
     <br>
@@ -21,7 +21,7 @@
           <v-toolbar-title >Meals and Respective Orders</v-toolbar-title>
         </v-toolbar>
     </v-card>
-    <order-details :dashboard="true"></order-details>
+    <order-details :dashboard="true"  :alterMeal="notPaidM"  @notPaidInvoice="notPaidInvoice" ></order-details>
 </div>
 </template>
 
@@ -32,12 +32,19 @@
             isActive: false,
             imgHeight: "250",
             show: false,
-            
+            notPaidM: {},
+            notPaidI: {}
         }
     },
     methods: {
       togleImgHeigh(){
-        this.imgHeight = this.imgHeight == "250" ? "500" : "250"; 
+            this.imgHeight = this.imgHeight == "250" ? "500" : "250"; 
+      },
+      notPaid(e){
+            this.notPaidM = e;
+      },
+      notPaidInvoice(e){
+            this.notPaidI = e;
       }
     }
   }

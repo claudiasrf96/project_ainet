@@ -44,6 +44,7 @@
 <script>
   export default {
     props: ['editing_food', 'selected_item'],
+    file: "",
     data: () => ({
       
       show: false,
@@ -69,7 +70,9 @@
     },
     methods: {
       submit () {  
-        
+        if( this.file != undefined){
+            this.submitFile();
+        }
         axios.put('api/menu/update/' + this.selected_item.id, this.editingItem)
             .then(response => {
                // this.$emit('updatedItem', response.data.data);
@@ -80,6 +83,29 @@
       clear () {
             this.editingItem = this.selected_item;
       },
+        submitFile(){
+                let formData = new FormData();
+
+                // Add the form data we need to submit
+                formData.append('file', this.file);
+
+                axios.post('api/menu/update/pic/' + this.selected_item.id, formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+                ).then(response =>{
+                    this.$store.commit('setUser',response.data.data);
+                    this.$emit('updatedPhoto', response.data.data.photo_url);
+                })
+                .catch(function(){
+                    console.log('FAILURE!!');
+                });
+            },
+            handleFileUpload(){
+                this.file = this.$refs.file.files[0];
+        },
       emitClose(){
         this.$emit('closeEdit');
       }

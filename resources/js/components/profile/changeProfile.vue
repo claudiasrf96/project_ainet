@@ -90,7 +90,7 @@ export default {
             this.user = this.$store.state.user;
         },
         submitType(){
-            if( this.file != ''){
+            if( this.file != undefined){
                 this.submitFile();
             }
             this.changeUser();

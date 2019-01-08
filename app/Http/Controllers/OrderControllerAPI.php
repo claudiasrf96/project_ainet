@@ -28,7 +28,21 @@ class OrderControllerAPI extends Controller
         $order->update($request->all());
         return new OrderResource($order);
     }
+/*
+    public function createInvoice(Request $request, $id)
+    {
+        $invoice = new Invoice();
+        $invoice->state = 'pending';
+        $invoice->meal_id = '1';
+        $invoice->date = Carbon::now();
 
+        OrderResource::collection(Order::where('meal_id', "1"))
+
+                                                
+        $order->update($request->all());
+        return new OrderResource($order);
+    }
+*/
     
 
     public function createOrder(Request $request)
@@ -38,7 +52,7 @@ class OrderControllerAPI extends Controller
         $order->item_id = $request->input('item_id');
         $order->meal_id = $request->input('meal_id');
         $order->responsible_cook_id = $request->input('responsible_cook_id');
-        $order->start = Carbon::now();
+        $order->start = Carbon::now()->toDateTimeString();
         $order->save();
         
         return new OrderResource($order);

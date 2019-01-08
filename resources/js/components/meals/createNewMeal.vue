@@ -2,7 +2,7 @@
     <div>
         <v-parallax :src="'storage/banners/meals.jpg'" height="250"> 
         </v-parallax>
-        <list-meals :new_meal="newMeal" :creating_meal="true" ></list-meals>
+        <list-meals :new_meal="newMeal" :creating_meal="'true'" ></list-meals>
         <list-tables @selected_table="setTable"></list-tables>
          <template>
             <v-layout  v-show="selectedTable.table_number != undefined " align-start justify-end row fill-height class="layoutSpace" >

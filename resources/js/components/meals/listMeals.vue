@@ -23,6 +23,8 @@
             return {
                 meals: [],
                 notSelected: false,
+                invoice: {},
+                invoiceDetails: {},
                 pagination: {
                     descending: true,
                     page: 1,
@@ -52,11 +54,15 @@
         watch: { //quand altera execut
             new_meal: function(newVal, oldVal){
                 this.meals.push(newVal);
-            }
+            },
+            creating_meal: function(newVal, oldVal){
+                console.log(newVal);
+            },
         },
 
         methods: {
             getMeals() {
+                
                 if(this.creating_meal == true){
                     //getActiveMealWithOpenOrder
                     axios.get('api/meal/getActiveMeal/' + this.user.id).then(response=>{
@@ -76,16 +82,16 @@
             close () {
                 this.dialog = false
                 setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
                 }, 300)
             },
 
             save () {
                 if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem)
+                    Object.assign(this.desserts[this.editedIndex], this.editedItem)
                 } else {
-                this.desserts.push(this.editedItem)
+                    this.desserts.push(this.editedItem)
                 }
                 this.close()
             },
@@ -97,11 +103,31 @@
                     response.data.data.orders.forEach(function(entry) {
                         entry.state = "not delivered";
                         axios.put('api/order/updateState/' + entry.id, entry).then(response => {  
-                            console.log("Order Not Delivered"); //Todo
+                            console.log("Order Not Delivered"); //Todo 
+                            this.$socket.emit('order_state_waiter', 'Not Delivered', 'list-orders', e); //Added Todo
                         });
                     });
-                    
                 }); 
+                this.createInvoice(item)
+            },
+            createInvoice(item){
+                this.invoice.state = 'pending';
+                this.invoice.meal_id = item.id;
+                this.invoice.total_price = item.total_price_preview;
+
+                axios.post('api/invoice/create', this.invoice).then(response=>{ 
+                    this.createInvoiceItem(item);
+                })
+            },
+            createInvoiceItem(item){
+                let array = item.orders;
+                this.invoiceDetails.quantity = 0;
+                this.invoiceDetails.sub_total_price = 0;
+                
+                axios.post('api/invoiceItem/create/' + item.id, item).then(response=>{ 
+                        console.log(response.data.data);
+                    })
+                    
             },
             getUserInfor() {
                 this.user = this.$store.state.user;
@@ -119,9 +145,13 @@
             },
       },
       sockets: {
-        meal_created(createdMeal){
-            this.changeStyleTemp(createdMeal[0], createdMeal[1], 3000); 
-        },  	
+        order_state_waiter(dataFromServer){
+            this.getOrders();
+        }, 
+        meal_state_manager(dataFromServer){
+            this.getOrders();
+        },  
+
       },
 }
 </script>

@@ -22,7 +22,6 @@
                     <v-slide-y-transition >
                         <v-card >
                             <form >
-                                
                                 <v-flex xs12 sm12 md12>
                                     <v-text-field v-model="order.selected_meal.id" disabled solo label="Id da Refeição" required></v-text-field>
                                 </v-flex>
@@ -85,19 +84,21 @@
             this.order.meal_id =  this.order.selected_meal.id;
             this.order.item_id = this.order.selected_dish.id;
 
+            this.$socket.emit('order_cook', 'Created', 'create-orders', this.order);
+            this.$socket.emit('order_cook', 'Created', 'create-meal', this.order);
             axios.post('api/order/createOrder', this.order).then(response => {
-                console.log(response.data.data);
                 this.new_order = responser.data.data;
                 this.order.item_id =this.order.selected_meal.id;
+
            
             }).catch(function (error) {
                 console.log(error);
             });
 
+            this.$socket.emit('order_cook', 'Created', 'create-orders', this.order);
+            this.$socket.emit('order_cook', 'Created', 'create-meal', this.order);
             axios.post('api/order/createOrder', this.order).then(response => {
-                
-                console.log(response.data.data);
-                    this.new_order = responser.data.data;
+                this.new_order = responser.data.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -106,6 +107,6 @@
         getUserInfo() {
             this.user = this.$store.state.user;
         },
-    }
+    },
   }
 </script>

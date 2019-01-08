@@ -42,6 +42,7 @@ export default new Vuex.Store({
             state.token= token;
             localStorage.setItem('token', token);
             axios.defaults.headers.common.Authorization = "Bearer " + token;
+            
         },
         loadTokenAndUserFromSession: (state) => {
             state.token = "";
@@ -49,7 +50,7 @@ export default new Vuex.Store({
             let token = localStorage.getItem('token');
             let user = localStorage.getItem('user');
             if (token) {
-                state.token = token;
+                 state.token = token;
                 axios.defaults.headers.common.Authorization = "Bearer " + token;
             }
             if (user) {

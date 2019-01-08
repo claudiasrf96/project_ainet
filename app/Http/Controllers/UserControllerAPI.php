@@ -6,7 +6,6 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\User;
 use Hash;
-use Carbon\Carbon;
 
 class UserControllerAPI extends Controller
 { //added
@@ -64,6 +63,23 @@ class UserControllerAPI extends Controller
         return new UserResource($user);
     } 
 
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+                'name' => 'required|min:3',
+                'username' => 'required|unique:users,username,'.$id
+            ]);
+        $user = User::findOrFail($id);
+        $user->name = $request->input('name');
+        $user->username= $request->input('username');
+        $user->email= $request->input('email');
+        $user->save();
+
+        return new UserResource($user);
+    } 
+
+    
+
     public function updatePic(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -99,14 +115,13 @@ class UserControllerAPI extends Controller
     public function createUser (Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3'.$id,
-            'username' => 'required|unique:users,username,'.$id,
-            'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'min:3'.$id
+            'name' => 'required|min:3',
+            'username' => 'required|unique:users,username,',
+            'email' => 'required|email|unique:users,email,',
+            'password' => 'min:3'
         ]);
         $user = new User();
         $user->fill($request->all());
-        $user->password = "123";
         $user->password = Hash::make($user->password);
         $user->save();
         
@@ -136,7 +151,7 @@ class UserControllerAPI extends Controller
     public function deleteUser($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
+        $user->softDeletes();
         return new UserResource($user);
     }
 

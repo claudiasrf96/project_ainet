@@ -8,10 +8,6 @@
             </div>
 
             <div class="block" >
-                <div class="digit">{{ shiftStart.hours }}</div>
-                <p class="text">Hours</p>
-            </div>
-            <div class="block" >
                 <p class="digit">{{ shiftStart.minutes }}</p>
                 <p class="text">Minutes</p>
             </div>
@@ -28,10 +24,6 @@
             <div class="block" >
                 <p class="digit">{{ daysPasted }}</p>
                 <p class="text">Days</p>
-            </div>
-            <div class="block" >
-                <p class="digit">{{ hoursPasted }}</p>
-                <p class="text">Hours</p>
             </div>
             <div class="block" >
                 <p class="digit">{{ minutesPasted }}</p>
@@ -78,9 +70,6 @@
             },
             hoursPasted() {
                 return Math.trunc(( this.now - this.dateLastShift) / 60 / 60) % 24;
-            },
-            daysPasted() {
-                return Math.trunc(( this.now - this.dateLastShift) / 60 / 60 / 24) ;
             }
         },
         methods: {
@@ -94,7 +83,6 @@
                 this.aux = new Date(this.user.last_shift_start);
                 this.shiftStart.seconds = this.aux.getSeconds();
                 this.shiftStart.minutes = this.aux.getMinutes();
-                this.shiftStart.hours = this.aux.getHours();
             }
         }
     };

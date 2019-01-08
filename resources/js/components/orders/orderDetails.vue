@@ -9,6 +9,9 @@
             <td class="text-xs-left">{{ props.item ?  props.item.total_price_preview : ""}}</td>
             
             <td > <v-icon>expand_more</v-icon></td>
+            <td >
+                <v-btn round color="primary" style="float: left;" dark primary hide-details @click="marckAsNotPaid(props.item)" > Not Paid  &emsp; <v-icon dark >edit</v-icon></v-btn>
+            </td>
         </tr>
     </template>
     <template slot="expand" slot-scope="props">
@@ -16,7 +19,7 @@
         <v-data-table :headers="headers2" :items="props.item.orders" item-key="id" >
             <template  slot="items" slot-scope="props" >
                 <td >{{ props.item.state}}</td>
-                <td class="text-xs-left"> {{ props.item.users.name }}</td>
+                <td class="text-xs-left"> {{  props.item.users ?  props.item.users.name : "" }}</td>
                 <td class="text-xs-left">{{ props.item.items.name }}</td>
             </template>
         </v-data-table>
@@ -49,6 +52,7 @@
                 { text: 'Responsavel', value: 'responsible_waiter_id' },
                 { text: 'Preço', value: 'total_price_preview' },
                 { text: 'Dropdown', sortable: false },
+                { sortable: false },
             ],
             headers2: [
                 {
@@ -76,7 +80,11 @@
                 })
         },
         deep: true
-        }
+        },
+        alterMeal: function(newVal, oldVal){
+            let index = this.meals.indexOf(newVal);
+            this.meals[index]  = newVal;
+        },
     },
     methods: {
         getMeals(){
@@ -105,6 +113,50 @@
                     });
                 } 
             });
+        },
+        marckAsNotPaid(mealAtual){
+            let index = this.meals.indexOf(mealAtual);
+            this.meals.splice(index, 1);
+
+            //Return single invoice associated with meal
+            axios.get('api/invoice/meal/' +  mealAtual.id).then(response=>{
+
+                let invoice = response.data.data;
+
+                this.$emit('notPaidInvoice', invoice);
+                
+                if(invoice.id != undefined){
+
+                    //Update Meal
+                    axios.put('api/invoice/update/' + invoice.id, invoice).then(response => {  
+
+                        let meal = response.data.data.meals;
+                        //update respective invoice
+                        meal.state = 'not paid';
+                        axios.put('api/meal/update/' + meal.id, meal).then(response => {  
+                            response.data.data.orders.forEach(function(entry) {
+
+                                // Update Meals
+                                entry.state = "not delivered";
+                                axios.put('api/order/update/state/notDeliverd/' + entry.id, entry).then(response => {  
+                                    console.log("Order Not Delivered"); //Todo        
+                                        this.$socket.emit('order_state_waiter', 'Not Delivered', 'list-order-details', e); 
+                                });
+                            });
+                        });
+                    }).catch(function(err) {
+                        console.log(err);
+
+                    });
+                }
+            
+            })
+          //update invoice 
+           
+
+            //Soket*/
+           
+         
         },
         getUserInfor() {
             this.user = this.$store.state.user;
