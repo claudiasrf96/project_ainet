@@ -3,8 +3,8 @@
         <h1>Last Shift</h1>
         <div xs6 v-if="user.shift_active == 0">
             <div class="block" >
-                <div class="digit" >{{ shiftStart.days }}</div>
-                <p class="text">Days</p>
+                <div class="digit" >{{ shiftStart.hours }}</div>
+                <p class="text">Hours</p>
             </div>
 
             <div class="block" >
@@ -22,8 +22,8 @@
         <h1>Time Has Passed</h1>
         <div xs6>
             <div class="block" >
-                <p class="digit">{{ daysPasted }}</p>
-                <p class="text">Days</p>
+                <p class="digit">{{ hoursPasted }}</p>
+                <p class="text">Hours</p>
             </div>
             <div class="block" >
                 <p class="digit">{{ minutesPasted }}</p>
@@ -47,7 +47,6 @@
                     seconds: "",
                     minutes: "",
                     hours: "",
-                    days: ""
                 },
                 now: Math.trunc((new Date()).getTime() / 1000),
             }
@@ -83,6 +82,7 @@
                 this.aux = new Date(this.user.last_shift_start);
                 this.shiftStart.seconds = this.aux.getSeconds();
                 this.shiftStart.minutes = this.aux.getMinutes();
+                this.shiftStart.hours = this.aux.getHours();
             }
         }
     };
